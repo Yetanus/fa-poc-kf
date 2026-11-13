@@ -1,11 +1,19 @@
 {
   "name": "fa-project",
   "version": "1.0.0",
+  "private": true,
   "description": "Final project of FE Academy",
-  "main": "index.js",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present"
   },
-  "author": "",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "license": "ISC"
 }
