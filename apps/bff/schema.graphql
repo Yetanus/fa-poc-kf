@@ -1,0 +1,47 @@
+scalar DateTime
+
+enum NewsSource {
+  HACKER_NEWS
+  SPACEFLIGHT
+  HASHNODE
+}
+
+type NewsItem {
+  id: ID!
+  source: NewsSource!
+  title: String!
+  url: String
+  summary: String
+  imageUrl: String
+  publishedAt: DateTime!
+  score: Int
+  commentsCount: Int
+  readTimeMinutes: Int
+  tags: [String!]!
+}
+
+type NewsEdge {
+  cursor: String!
+  node: NewsItem!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  endCursor: String
+}
+
+type NewsConnection {
+  edges: [NewsEdge!]!
+  pageInfo: PageInfo!
+}
+
+input FeedFilter {
+  sources: [NewsSource!]
+  search: String
+  tags: [String!]
+}
+
+type Query {
+  feed(filter: FeedFilter, first: Int = 20, after: String): NewsConnection!
+  item(id: ID!): NewsItem
+}

@@ -7,7 +7,7 @@ import prettier from 'eslint-config-prettier';
 import { defineConfig, globalIgnores } from 'eslint/config';
 
 export default defineConfig([
-  globalIgnores(['**/dist', '**/node_modules', '**/.angular', '**/coverage']),
+  globalIgnores(['**/dist', '**/node_modules', '**/.angular', '**/coverage', '**/generated']),
   {
     files: ['**/*.{js,ts,tsx}'],
     extends: [js.configs.recommended, tseslint.configs.recommended],
