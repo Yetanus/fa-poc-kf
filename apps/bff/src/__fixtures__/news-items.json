@@ -1,0 +1,58 @@
+[
+  {
+    "id": "HACKER_NEWS:1",
+    "source": "HACKER_NEWS",
+    "title": "Show HN: My new tool",
+    "url": "https://example.com/tool",
+    "summary": null,
+    "imageUrl": null,
+    "publishedAt": "2026-11-20T10:00:00.000Z",
+    "authorName": "pg",
+    "score": 120,
+    "commentsCount": 40,
+    "readTimeMinutes": null,
+    "tags": ["example.com"]
+  },
+  {
+    "id": "HACKER_NEWS:2",
+    "source": "HACKER_NEWS",
+    "title": "Ask HN: How do you learn?",
+    "url": null,
+    "summary": "Just curious",
+    "imageUrl": null,
+    "publishedAt": "2026-11-20T08:00:00.000Z",
+    "authorName": "dang",
+    "score": 10,
+    "commentsCount": 5,
+    "readTimeMinutes": null,
+    "tags": []
+  },
+  {
+    "id": "SPACEFLIGHT:1",
+    "source": "SPACEFLIGHT",
+    "title": "Rocket launched",
+    "url": "https://spacenews.com/rocket",
+    "summary": "A rocket was launched",
+    "imageUrl": "https://spacenews.com/rocket.jpg",
+    "publishedAt": "2026-11-20T12:00:00.000Z",
+    "authorName": "SpaceNews",
+    "score": null,
+    "commentsCount": null,
+    "readTimeMinutes": null,
+    "tags": ["spacenews", "spacex"]
+  },
+  {
+    "id": "DEV_TO:1",
+    "source": "DEV_TO",
+    "title": "My new tool (cross post)",
+    "url": "https://example.com/tool",
+    "summary": "Cross posted from my blog",
+    "imageUrl": null,
+    "publishedAt": "2026-11-20T09:00:00.000Z",
+    "authorName": "John",
+    "score": 3,
+    "commentsCount": 0,
+    "readTimeMinutes": 4,
+    "tags": ["javascript", "webdev"]
+  }
+]

@@ -8,7 +8,8 @@
     "build": "tsc -p tsconfig.json",
     "start": "node --env-file-if-exists=.env dist/main.js",
     "codegen": "graphql-codegen --config codegen.ts && npm run codegen:spaceflight",
-    "codegen:spaceflight": "npx -y openapi-typescript@7.13.0 src/adapters/spaceflight/openapi.yaml -o src/generated/spaceflight.ts"
+    "codegen:spaceflight": "npx -y openapi-typescript@7.13.0 src/adapters/spaceflight/openapi.yaml -o src/generated/spaceflight.ts",
+    "test": "vitest run"
   },
   "devDependencies": {
     "@fa/contracts": "*",
@@ -17,7 +18,8 @@
     "@graphql-codegen/typescript-resolvers": "^7.0.1",
     "@types/node": "^22.20.5",
     "tsx": "^4.23.15",
-    "typescript": "~6.0.3"
+    "typescript": "~6.0.3",
+    "vitest": "^5.1.1"
   },
   "dependencies": {
     "dataloader": "^2.2.3",
