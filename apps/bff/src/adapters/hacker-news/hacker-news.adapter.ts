@@ -107,7 +107,8 @@ function toNewsItem(item: HnItem): NewsItem {
     url: item.url ?? null,
     summary: item.text ? htmlToText(item.text) : null,
     imageUrl: null,
-    publishedAt: new Date(item.time).toISOString(),
+    // HN API returns unix seconds, Date expects ms
+    publishedAt: new Date(item.time * 1000).toISOString(),
     authorName: item.by ?? null,
     score: item.score ?? null,
     commentsCount: item.descendants ?? 0,
