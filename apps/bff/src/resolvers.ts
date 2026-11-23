@@ -4,6 +4,7 @@ import type { Resolvers } from './generated/resolvers.js';
 import { config } from './config.js';
 import { SpaceflightAdapter } from './adapters/spaceflight/spaceflight.adapter.js';
 import { DevToAdapter } from './adapters/dev-to/dev-to.adapter.js';
+import { aggregateFeed } from './aggregator.js';
 
 const ALL_SOURCES: NewsSource[] = ['HACKER_NEWS', 'SPACEFLIGHT', 'DEV_TO'];
 
@@ -13,25 +14,19 @@ const devTo = new DevToAdapter(config.DEV_TO_API_URL);
 export const resolvers: Resolvers = {
   DateTime: DateTimeResolver,
   Query: {
-    feed: async (_parent, { filter, first }, { hackerNews }) => {
-      const sources = filter?.sources ?? ALL_SOURCES;
-      const search = filter?.search ?? undefined;
-      const page = { limit: first, offset: 0, search };
-
-      const pages = await Promise.all([
-        sources.includes('SPACEFLIGHT') ? spaceflight.fetchPage(page) : null,
-        sources.includes('HACKER_NEWS') ? hackerNews.fetchPage(page) : null,
-        sources.includes('DEV_TO') ? devTo.fetchPage(page) : null,
-      ]);
-
-      const all = pages
-        .flatMap((p) => p?.items ?? [])
-        .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
-      const items = all.slice(0, first);
+    feed: async (_parent, { filter, first, after }, { hackerNews, upstreamErrors }) => {
+      const result = await aggregateFeed([hackerNews, spaceflight, devTo], {
+        sources: filter?.sources ?? ALL_SOURCES,
+        search: filter?.search?.trim() || undefined,
+        tags: filter?.tags ?? [],
+        first,
+        after: after ?? null,
+      });
+      upstreamErrors.push(...result.errors);
 
       return {
-        edges: items.map((node) => ({ cursor: node.id, node })),
-        pageInfo: { hasNextPage: all.length > first, endCursor: items.at(-1)?.id ?? null },
+        edges: result.items.map((node) => ({ cursor: node.id, node })),
+        pageInfo: { hasNextPage: result.nextCursor !== null, endCursor: result.nextCursor },
       };
     },
     item: async (_parent, { id }, { hackerNews }) => {

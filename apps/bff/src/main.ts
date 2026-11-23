@@ -3,10 +3,12 @@ import { createYoga } from 'graphql-yoga';
 import { config } from './config.js';
 import { schema } from './schema.js';
 import { createContext } from './context.js';
+import { useUpstreamErrors } from './upstream-errors.plugin.js';
 
 const yoga = createYoga({
   schema,
   context: createContext,
+  plugins: [useUpstreamErrors()],
   cors: {
     origin: config.CORS_ORIGIN,
     credentials: true,
