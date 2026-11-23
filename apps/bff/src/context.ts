@@ -1,7 +1,7 @@
 import type { GraphQLError } from 'graphql';
 import type { YogaInitialContext } from 'graphql-yoga';
-import { config } from './config.js';
-import { HackerNewsAdapter } from './adapters/hacker-news/hacker-news.adapter.js';
+import { createHackerNews } from './adapters/index.js';
+import type { HackerNewsAdapter } from './adapters/hacker-news/hacker-news.adapter.js';
 
 export interface GraphQLContext extends YogaInitialContext {
   hackerNews: HackerNewsAdapter;
@@ -10,7 +10,7 @@ export interface GraphQLContext extends YogaInitialContext {
 
 export function createContext() {
   return {
-    hackerNews: new HackerNewsAdapter(config.HACKER_NEWS_API_URL, config.HACKER_NEWS_SEARCH_URL),
+    hackerNews: createHackerNews(),
     upstreamErrors: [] as GraphQLError[],
   };
 }

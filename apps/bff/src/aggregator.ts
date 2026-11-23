@@ -3,7 +3,9 @@ import { z } from 'zod';
 import type { NewsItem, NewsSource } from '@fa/contracts';
 import type { AdapterPage, NewsAdapter } from './adapters/news-adapter.js';
 import { TtlCache } from './cache.js';
-import { UpstreamError } from './errors.js';
+import type { Logger } from 'graphql-yoga';
+import { ValidationError } from './errors.js';
+import { logUpstreamError } from './logger.js';
 
 export interface FeedRequest {
   sources: NewsSource[];
@@ -36,13 +38,14 @@ export function decodeCursor(cursor: string): Offsets {
   try {
     return cursorSchema.parse(JSON.parse(Buffer.from(cursor, 'base64url').toString()));
   } catch {
-    throw new GraphQLError('Invalid cursor', { extensions: { code: 'BAD_CURSOR' } });
+    throw new ValidationError('Invalid cursor');
   }
 }
 
 export async function aggregateFeed(
   adapters: NewsAdapter[],
   req: FeedRequest,
+  log: Logger,
 ): Promise<FeedResult> {
   const offsets: Offsets = req.after
     ? decodeCursor(req.after)
@@ -71,7 +74,8 @@ export async function aggregateFeed(
   results.forEach((result, i) => {
     const source = active[i]!.source;
     if (result.status === 'rejected') {
-      errors.push(toGraphQLError(source, result.reason));
+      logUpstreamError(log, source, result.reason);
+      errors.push(toGraphQLError(source));
       next[source] = offsets[source] ?? 0;
       return;
     }
@@ -99,8 +103,7 @@ function matchesTags(item: NewsItem, tags: string[]): boolean {
   return tags.some((tag) => item.tags.includes(tag.toLowerCase()));
 }
 
-function toGraphQLError(source: NewsSource, reason: unknown): GraphQLError {
-  console.error(`[${source}]`, reason instanceof UpstreamError ? reason.message : reason);
+function toGraphQLError(source: NewsSource): GraphQLError {
   return new GraphQLError(`${source} is unavailable`, {
     extensions: { code: 'UPSTREAM_UNAVAILABLE', source },
   });

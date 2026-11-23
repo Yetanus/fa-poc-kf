@@ -42,6 +42,14 @@ type NewsConnection {
   pageInfo: PageInfo!
 }
 
+type SourceStatus {
+  source: NewsSource!
+  healthy: Boolean!
+  latencyMs: Int
+  lastError: String
+  cachedAt: DateTime!
+}
+
 input FeedFilter {
   sources: [NewsSource!]
   search: String
@@ -51,4 +59,5 @@ input FeedFilter {
 type Query {
   feed(filter: FeedFilter, first: Int = 20, after: String): NewsConnection!
   item(id: ID!): NewsItem
+  sources: [SourceStatus!]!
 }

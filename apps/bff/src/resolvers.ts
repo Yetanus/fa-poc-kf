@@ -1,27 +1,27 @@
 import { DateTimeResolver } from 'graphql-scalars';
 import type { NewsSource } from '@fa/contracts';
 import type { Resolvers } from './generated/resolvers.js';
-import { config } from './config.js';
-import { SpaceflightAdapter } from './adapters/spaceflight/spaceflight.adapter.js';
-import { DevToAdapter } from './adapters/dev-to/dev-to.adapter.js';
+import { devTo, spaceflight } from './adapters/index.js';
 import { aggregateFeed } from './aggregator.js';
+import { checkSources } from './health.js';
 
 const ALL_SOURCES: NewsSource[] = ['HACKER_NEWS', 'SPACEFLIGHT', 'DEV_TO'];
-
-const spaceflight = new SpaceflightAdapter(config.SPACEFLIGHT_API_URL);
-const devTo = new DevToAdapter(config.DEV_TO_API_URL);
 
 export const resolvers: Resolvers = {
   DateTime: DateTimeResolver,
   Query: {
-    feed: async (_parent, { filter, first, after }, { hackerNews, upstreamErrors }) => {
-      const result = await aggregateFeed([hackerNews, spaceflight, devTo], {
-        sources: filter?.sources ?? ALL_SOURCES,
-        search: filter?.search?.trim() || undefined,
-        tags: filter?.tags ?? [],
-        first,
-        after: after ?? null,
-      });
+    feed: async (_parent, { filter, first, after }, { hackerNews, upstreamErrors, log }) => {
+      const result = await aggregateFeed(
+        [hackerNews, spaceflight, devTo],
+        {
+          sources: filter?.sources ?? ALL_SOURCES,
+          search: filter?.search?.trim() || undefined,
+          tags: filter?.tags ?? [],
+          first,
+          after: after ?? null,
+        },
+        log,
+      );
       upstreamErrors.push(...result.errors);
 
       return {
@@ -29,6 +29,7 @@ export const resolvers: Resolvers = {
         pageInfo: { hasNextPage: result.nextCursor !== null, endCursor: result.nextCursor },
       };
     },
+    sources: (_parent, _args, { log }) => checkSources(log),
     item: async (_parent, { id }, { hackerNews }) => {
       const [source, nativeId] = id.split(':');
       if (!nativeId) return null;

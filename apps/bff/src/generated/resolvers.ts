@@ -71,6 +71,7 @@ export type Query = {
   __typename?: 'Query';
   feed: NewsConnection;
   item?: Maybe<NewsItem>;
+  sources: Array<SourceStatus>;
 };
 
 
@@ -83,6 +84,15 @@ export type QueryFeedArgs = {
 
 export type QueryItemArgs = {
   id: Scalars['ID']['input'];
+};
+
+export type SourceStatus = {
+  __typename?: 'SourceStatus';
+  cachedAt: Scalars['DateTime']['output'];
+  healthy: Scalars['Boolean']['output'];
+  lastError?: Maybe<Scalars['String']['output']>;
+  latencyMs?: Maybe<Scalars['Int']['output']>;
+  source: NewsSource;
 };
 
 
@@ -170,6 +180,7 @@ export type ResolversTypes = {
   NewsSource: NewsSource;
   PageInfo: ResolverTypeWrapper<PageInfo>;
   Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+  SourceStatus: ResolverTypeWrapper<SourceStatus>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
 };
 
@@ -186,6 +197,7 @@ export type ResolversParentTypes = {
   NewsItem: NewsItemModel;
   PageInfo: PageInfo;
   Query: Record<PropertyKey, never>;
+  SourceStatus: SourceStatus;
   String: Scalars['String']['output'];
 };
 
@@ -232,6 +244,15 @@ export type PageInfoResolvers<ContextType = GraphQLContext, ParentType extends R
 export type QueryResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   feed?: Resolver<ResolversTypes['NewsConnection'], ParentType, ContextType, RequireFields<QueryFeedArgs, 'first'>>;
   item?: Resolver<Maybe<ResolversTypes['NewsItem']>, ParentType, ContextType, RequireFields<QueryItemArgs, 'id'>>;
+  sources?: Resolver<Array<ResolversTypes['SourceStatus']>, ParentType, ContextType>;
+};
+
+export type SourceStatusResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['SourceStatus'] = ResolversParentTypes['SourceStatus']> = {
+  cachedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  healthy?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  lastError?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  latencyMs?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  source?: Resolver<ResolversTypes['NewsSource'], ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = GraphQLContext> = {
@@ -242,5 +263,6 @@ export type Resolvers<ContextType = GraphQLContext> = {
   NewsItem?: NewsItemResolvers<ContextType>;
   PageInfo?: PageInfoResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  SourceStatus?: SourceStatusResolvers<ContextType>;
 };
 

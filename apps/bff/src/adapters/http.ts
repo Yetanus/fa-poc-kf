@@ -8,15 +8,11 @@ export async function getJson(source: NewsSource, url: string): Promise<unknown>
   try {
     response = await fetch(url, { signal: AbortSignal.timeout(TIMEOUT_MS) });
   } catch (err) {
-    throw new UpstreamError(source, `Request to ${url} failed: ${(err as Error).message}`);
+    throw new UpstreamError(source, `Request failed: ${(err as Error).message}`, undefined, url);
   }
 
   if (!response.ok) {
-    throw new UpstreamError(
-      source,
-      `Request to ${url} returned ${response.status}`,
-      response.status,
-    );
+    throw new UpstreamError(source, `HTTP ${response.status}`, response.status, url);
   }
   return response.json();
 }

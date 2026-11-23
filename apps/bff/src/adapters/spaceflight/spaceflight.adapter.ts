@@ -12,7 +12,18 @@ export class SpaceflightAdapter implements NewsAdapter {
   private readonly client;
 
   constructor(baseUrl: string) {
-    this.client = createClient<paths>({ baseUrl });
+    this.client = createClient<paths>({
+      baseUrl,
+      fetch: (request) =>
+        fetch(request).catch((err: Error) => {
+          throw new UpstreamError(
+            this.source,
+            `Request failed: ${err.message}`,
+            undefined,
+            request.url,
+          );
+        }),
+    });
   }
 
   async fetchPage({ limit, offset, search }: PageRequest): Promise<AdapterPage> {
@@ -24,7 +35,12 @@ export class SpaceflightAdapter implements NewsAdapter {
     });
 
     if (!response.ok || !data) {
-      throw new UpstreamError(this.source, 'Failed to fetch articles', response.status);
+      throw new UpstreamError(
+        this.source,
+        `HTTP ${response.status}`,
+        response.status,
+        response.url,
+      );
     }
 
     const parsed = articleListSchema.safeParse(data);
@@ -46,7 +62,12 @@ export class SpaceflightAdapter implements NewsAdapter {
 
     if (response.status === 404) return null;
     if (!data) {
-      throw new UpstreamError(this.source, 'Failed to fetch article', response.status);
+      throw new UpstreamError(
+        this.source,
+        `HTTP ${response.status}`,
+        response.status,
+        response.url,
+      );
     }
 
     const parsed = articleSchema.safeParse(data);
