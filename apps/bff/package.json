@@ -7,7 +7,8 @@
     "dev": "tsx watch --env-file-if-exists=.env src/main.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node --env-file-if-exists=.env dist/main.js",
-    "codegen": "graphql-codegen --config codegen.ts"
+    "codegen": "graphql-codegen --config codegen.ts && npm run codegen:spaceflight",
+    "codegen:spaceflight": "npx -y openapi-typescript@7.13.0 src/adapters/spaceflight/openapi.yaml -o src/generated/spaceflight.ts"
   },
   "devDependencies": {
     "@fa/contracts": "*",
@@ -22,6 +23,7 @@
     "graphql": "^17.1.0",
     "graphql-scalars": "^2.0.1",
     "graphql-yoga": "^6.1.0",
+    "openapi-fetch": "^0.17.0",
     "zod": "^4.6.7"
   }
 }
