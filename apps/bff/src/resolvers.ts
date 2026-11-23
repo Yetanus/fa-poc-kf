@@ -1,13 +1,14 @@
 import { DateTimeResolver } from 'graphql-scalars';
 import type { NewsSource } from '@fa/contracts';
 import type { Resolvers } from './generated/resolvers.js';
-import { newsFixtures } from './fixtures/news.js';
 import { config } from './config.js';
 import { SpaceflightAdapter } from './adapters/spaceflight/spaceflight.adapter.js';
+import { DevToAdapter } from './adapters/dev-to/dev-to.adapter.js';
 
-const ALL_SOURCES: NewsSource[] = ['HACKER_NEWS', 'SPACEFLIGHT', 'HASHNODE'];
+const ALL_SOURCES: NewsSource[] = ['HACKER_NEWS', 'SPACEFLIGHT', 'DEV_TO'];
 
 const spaceflight = new SpaceflightAdapter(config.SPACEFLIGHT_API_URL);
+const devTo = new DevToAdapter(config.DEV_TO_API_URL);
 
 export const resolvers: Resolvers = {
   DateTime: DateTimeResolver,
@@ -17,17 +18,15 @@ export const resolvers: Resolvers = {
       const search = filter?.search ?? undefined;
       const page = { limit: first, offset: 0, search };
 
-      const [fromSpaceflight, fromHackerNews] = await Promise.all([
+      const pages = await Promise.all([
         sources.includes('SPACEFLIGHT') ? spaceflight.fetchPage(page) : null,
         sources.includes('HACKER_NEWS') ? hackerNews.fetchPage(page) : null,
+        sources.includes('DEV_TO') ? devTo.fetchPage(page) : null,
       ]);
-      const fromFixtures = newsFixtures.filter((item) => sources.includes(item.source));
 
-      const all = [
-        ...fromFixtures,
-        ...(fromSpaceflight?.items ?? []),
-        ...(fromHackerNews?.items ?? []),
-      ].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+      const all = pages
+        .flatMap((p) => p?.items ?? [])
+        .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
       const items = all.slice(0, first);
 
       return {
@@ -37,13 +36,18 @@ export const resolvers: Resolvers = {
     },
     item: async (_parent, { id }, { hackerNews }) => {
       const [source, nativeId] = id.split(':');
-      if (source === 'SPACEFLIGHT' && nativeId) {
-        return spaceflight.fetchById(nativeId);
+      if (!nativeId) return null;
+
+      switch (source) {
+        case 'SPACEFLIGHT':
+          return spaceflight.fetchById(nativeId);
+        case 'HACKER_NEWS':
+          return hackerNews.fetchById(nativeId);
+        case 'DEV_TO':
+          return devTo.fetchById(nativeId);
+        default:
+          return null;
       }
-      if (source === 'HACKER_NEWS' && nativeId) {
-        return hackerNews.fetchById(nativeId);
-      }
-      return newsFixtures.find((item) => item.id === id) ?? null;
     },
   },
   NewsItem: {

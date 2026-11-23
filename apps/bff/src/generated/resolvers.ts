@@ -57,8 +57,8 @@ export type NewsItem = {
 };
 
 export type NewsSource =
+  | 'DEV_TO'
   | 'HACKER_NEWS'
-  | 'HASHNODE'
   | 'SPACEFLIGHT';
 
 export type PageInfo = {

@@ -3,7 +3,7 @@ scalar DateTime
 enum NewsSource {
   HACKER_NEWS
   SPACEFLIGHT
-  HASHNODE
+  DEV_TO
 }
 
 type NewsItem {
