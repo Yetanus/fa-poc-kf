@@ -2,9 +2,11 @@ import { createServer } from 'node:http';
 import { createYoga } from 'graphql-yoga';
 import { config } from './config.js';
 import { schema } from './schema.js';
+import { createContext } from './context.js';
 
 const yoga = createYoga({
   schema,
+  context: createContext,
   cors: {
     origin: config.CORS_ORIGIN,
     credentials: true,

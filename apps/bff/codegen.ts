@@ -7,6 +7,7 @@ const config: CodegenConfig = {
       plugins: ['typescript', 'typescript-resolvers'],
       config: {
         useTypeImports: true,
+        contextType: '../context.js#GraphQLContext',
         enumsAsTypes: true,
         scalars: { DateTime: 'string' },
         mappers: { NewsItem: '@fa/contracts#NewsItem as NewsItemModel' },

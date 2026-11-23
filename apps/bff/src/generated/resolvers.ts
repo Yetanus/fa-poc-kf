@@ -1,5 +1,6 @@
 import type { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import type { NewsItem as NewsItemModel } from '@fa/contracts';
+import type { GraphQLContext } from '../context.js';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
@@ -12,6 +13,13 @@ export type Scalars = {
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
   DateTime: { input: string; output: string; }
+};
+
+export type Author = {
+  __typename?: 'Author';
+  karma?: Maybe<Scalars['Int']['output']>;
+  name: Scalars['String']['output'];
+  profileUrl?: Maybe<Scalars['String']['output']>;
 };
 
 export type FeedFilter = {
@@ -34,6 +42,7 @@ export type NewsEdge = {
 
 export type NewsItem = {
   __typename?: 'NewsItem';
+  author?: Maybe<Author>;
   commentsCount?: Maybe<Scalars['Int']['output']>;
   id: Scalars['ID']['output'];
   imageUrl?: Maybe<Scalars['String']['output']>;
@@ -149,6 +158,7 @@ export type DirectiveResolverFn<TResult = Record<PropertyKey, never>, TParent = 
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  Author: ResolverTypeWrapper<Author>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   FeedFilter: FeedFilter;
@@ -165,6 +175,7 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  Author: Author;
   Boolean: Scalars['Boolean']['output'];
   DateTime: Scalars['DateTime']['output'];
   FeedFilter: FeedFilter;
@@ -178,21 +189,28 @@ export type ResolversParentTypes = {
   String: Scalars['String']['output'];
 };
 
+export type AuthorResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Author'] = ResolversParentTypes['Author']> = {
+  karma?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  profileUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+};
+
 export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
   name: 'DateTime';
 }
 
-export type NewsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['NewsConnection'] = ResolversParentTypes['NewsConnection']> = {
+export type NewsConnectionResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['NewsConnection'] = ResolversParentTypes['NewsConnection']> = {
   edges?: Resolver<Array<ResolversTypes['NewsEdge']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
 };
 
-export type NewsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['NewsEdge'] = ResolversParentTypes['NewsEdge']> = {
+export type NewsEdgeResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['NewsEdge'] = ResolversParentTypes['NewsEdge']> = {
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['NewsItem'], ParentType, ContextType>;
 };
 
-export type NewsItemResolvers<ContextType = any, ParentType extends ResolversParentTypes['NewsItem'] = ResolversParentTypes['NewsItem']> = {
+export type NewsItemResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['NewsItem'] = ResolversParentTypes['NewsItem']> = {
+  author?: Resolver<Maybe<ResolversTypes['Author']>, ParentType, ContextType>;
   commentsCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   imageUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -206,17 +224,18 @@ export type NewsItemResolvers<ContextType = any, ParentType extends ResolversPar
   url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 };
 
-export type PageInfoResolvers<ContextType = any, ParentType extends ResolversParentTypes['PageInfo'] = ResolversParentTypes['PageInfo']> = {
+export type PageInfoResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['PageInfo'] = ResolversParentTypes['PageInfo']> = {
   endCursor?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
 };
 
-export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+export type QueryResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   feed?: Resolver<ResolversTypes['NewsConnection'], ParentType, ContextType, RequireFields<QueryFeedArgs, 'first'>>;
   item?: Resolver<Maybe<ResolversTypes['NewsItem']>, ParentType, ContextType, RequireFields<QueryItemArgs, 'id'>>;
 };
 
-export type Resolvers<ContextType = any> = {
+export type Resolvers<ContextType = GraphQLContext> = {
+  Author?: AuthorResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
   NewsConnection?: NewsConnectionResolvers<ContextType>;
   NewsEdge?: NewsEdgeResolvers<ContextType>;

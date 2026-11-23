@@ -18,6 +18,13 @@ type NewsItem {
   commentsCount: Int
   readTimeMinutes: Int
   tags: [String!]!
+  author: Author
+}
+
+type Author {
+  name: String!
+  profileUrl: String
+  karma: Int
 }
 
 type NewsEdge {
