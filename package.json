@@ -15,11 +15,12 @@
     "test": "npm run test --workspaces --if-present"
   },
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=22.22.3"
   },
   "license": "ISC",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "angular-eslint": "^22.8.0",
     "eslint": "^10.14.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-hooks": "^7.1.1",
