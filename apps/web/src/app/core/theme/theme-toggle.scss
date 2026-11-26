@@ -1,0 +1,26 @@
+@use 'mixins' as *;
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--fa-space-2);
+  min-height: 2.75rem;
+  padding: var(--fa-space-2) var(--fa-space-4);
+  color: var(--fa-color-text);
+  background: var(--fa-color-surface);
+  border: 1px solid var(--fa-color-border);
+  border-radius: var(--fa-radius-lg);
+  transition: background-color var(--fa-duration-fast) ease;
+
+  &:hover {
+    background: var(--fa-color-surface-raised);
+  }
+
+  &[aria-pressed='true'] {
+    color: var(--fa-color-accent-contrast);
+    background: var(--fa-color-accent);
+    border-color: var(--fa-color-accent);
+  }
+
+  @include fa-focus-visible;
+}

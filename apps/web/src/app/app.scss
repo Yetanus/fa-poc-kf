@@ -1,0 +1,11 @@
+.app {
+  padding-block: var(--fa-space-6);
+}
+
+.app__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--fa-space-4);
+}

@@ -1,0 +1,82 @@
+// temporary neutral palette, final colors come later
+
+@mixin light-colors {
+  color-scheme: light;
+  --fa-color-bg: #ffffff;
+  --fa-color-surface: #f5f5f5;
+  --fa-color-surface-raised: #ffffff;
+  --fa-color-text: #1a1a1a;
+  --fa-color-text-muted: #5c5c5c;
+  --fa-color-border: #d6d6d6;
+  --fa-color-accent: #3d3d3d;
+  --fa-color-accent-contrast: #ffffff;
+  --fa-color-focus: #000000;
+  --fa-color-danger: #8a1c1c;
+  --fa-color-success: #1c5e2a;
+  --fa-color-source-hn: #4a4a4a;
+  --fa-color-source-spaceflight: #6a6a6a;
+  --fa-color-source-devto: #2a2a2a;
+  --fa-shadow-card: 0 1px 3px rgb(0 0 0 / 0.12);
+}
+
+@mixin dark-colors {
+  color-scheme: dark;
+  --fa-color-bg: #121212;
+  --fa-color-surface: #1e1e1e;
+  --fa-color-surface-raised: #262626;
+  --fa-color-text: #ededed;
+  --fa-color-text-muted: #a8a8a8;
+  --fa-color-border: #3d3d3d;
+  --fa-color-accent: #d4d4d4;
+  --fa-color-accent-contrast: #121212;
+  --fa-color-focus: #ffffff;
+  --fa-color-danger: #f0a0a0;
+  --fa-color-success: #9ad4a4;
+  --fa-color-source-hn: #b8b8b8;
+  --fa-color-source-spaceflight: #939393;
+  --fa-color-source-devto: #dcdcdc;
+  --fa-shadow-card: 0 1px 3px rgb(0 0 0 / 0.6);
+}
+
+:root {
+  @include light-colors;
+
+  --fa-font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --fa-font-size-sm: 0.875rem;
+  --fa-font-size-md: 1rem;
+  --fa-font-size-lg: 1.25rem;
+  --fa-font-size-xl: 1.75rem;
+  --fa-line-height: 1.5;
+
+  --fa-space-1: 0.25rem;
+  --fa-space-2: 0.5rem;
+  --fa-space-3: 0.75rem;
+  --fa-space-4: 1rem;
+  --fa-space-6: 1.5rem;
+  --fa-space-8: 2rem;
+
+  --fa-radius-sm: 4px;
+  --fa-radius-md: 8px;
+  --fa-radius-lg: 16px;
+
+  --fa-duration-fast: 150ms;
+  --fa-duration-base: 250ms;
+  --fa-focus-ring: 0 0 0 3px var(--fa-color-focus);
+}
+
+[data-theme='dark'] {
+  @include dark-colors;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    @include dark-colors;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --fa-duration-fast: 0ms;
+    --fa-duration-base: 0ms;
+  }
+}

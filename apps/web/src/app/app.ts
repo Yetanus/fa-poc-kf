@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { ThemeToggle } from './core/theme/theme-toggle';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, ThemeToggle],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })

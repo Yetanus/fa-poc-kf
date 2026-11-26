@@ -1,0 +1,10 @@
+@use 'mixins' as *;
+
+.fa-visually-hidden {
+  @include fa-visually-hidden;
+}
+
+:focus-visible {
+  outline: 2px solid transparent;
+  box-shadow: var(--fa-focus-ring);
+}

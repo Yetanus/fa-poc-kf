@@ -1,0 +1,40 @@
+body {
+  font-family: var(--fa-font-sans);
+  font-size: var(--fa-font-size-md);
+  line-height: var(--fa-line-height);
+  color: var(--fa-color-text);
+  background: var(--fa-color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: var(--fa-font-size-xl);
+}
+
+h2 {
+  font-size: var(--fa-font-size-lg);
+}
+
+h3 {
+  font-size: var(--fa-font-size-md);
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 0.15em;
+}
+
+small,
+.fa-text-muted {
+  color: var(--fa-color-text-muted);
+}
+
+small {
+  font-size: var(--fa-font-size-sm);
+}
