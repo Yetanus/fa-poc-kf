@@ -1,11 +1,44 @@
-.app {
-  padding-block: var(--fa-space-6);
+@use 'mixins' as *;
+
+:host {
+  display: grid;
+  grid-template-areas:
+    'header'
+    'main'
+    'footer';
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 100dvh;
 }
 
-.app__top {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--fa-space-4);
+.app__header {
+  grid-area: header;
+}
+
+.app__main {
+  grid-area: main;
+  padding-block: var(--fa-space-8);
+}
+
+.app__footer {
+  grid-area: footer;
+}
+
+.skip-link {
+  position: absolute;
+  top: var(--fa-space-2);
+  left: var(--fa-space-2);
+  z-index: 10;
+  padding: var(--fa-space-2) var(--fa-space-4);
+  color: var(--fa-color-accent-contrast);
+  background: var(--fa-color-accent);
+  border-radius: var(--fa-radius-sm);
+  transform: translateY(-200%);
+  transition: transform var(--fa-duration-fast) ease;
+
+  &:focus-visible {
+    transform: translateY(0);
+  }
+
+  @include fa-focus-visible;
 }

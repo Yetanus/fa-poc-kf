@@ -1,7 +1,9 @@
-<div class="fa-container fa-stack app">
-  <div class="app__top">
-    <h1>{{ title }}</h1>
-    <app-theme-toggle />
-  </div>
+<a class="skip-link" href="#main" (click)="skipToMain($event)">Przejdź do treści</a>
+
+<app-header class="app__header" />
+
+<main id="main" class="fa-container app__main" tabindex="-1" #main>
   <router-outlet />
-</div>
+</main>
+
+<app-footer class="app__footer" />

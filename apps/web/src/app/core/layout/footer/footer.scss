@@ -1,0 +1,13 @@
+.footer {
+  font-size: var(--fa-font-size-sm);
+  color: var(--fa-color-text-muted);
+  border-top: 1px solid var(--fa-color-border);
+}
+
+.footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--fa-space-2);
+  padding-block: var(--fa-space-6);
+}

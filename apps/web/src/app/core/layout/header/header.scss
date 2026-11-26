@@ -1,0 +1,62 @@
+@use 'mixins' as *;
+
+.header {
+  background: var(--fa-color-surface);
+  border-bottom: 1px solid var(--fa-color-border);
+}
+
+.header__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--fa-space-4);
+  padding-block: var(--fa-space-3);
+
+  @include fa-breakpoint(md) {
+    gap: var(--fa-space-8);
+  }
+}
+
+.header__title {
+  font-size: var(--fa-font-size-lg);
+  font-weight: 700;
+  color: #222;
+  text-decoration: none;
+  border-radius: var(--fa-radius-sm);
+
+  @include fa-focus-visible;
+}
+
+.header__nav {
+  margin-inline-end: auto;
+}
+
+.header__links {
+  display: flex;
+  gap: var(--fa-space-2);
+  padding: 0;
+  list-style: none;
+}
+
+.header__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding-inline: var(--fa-space-3);
+  color: var(--fa-color-text-muted);
+  text-decoration: none;
+  border-radius: var(--fa-radius-sm);
+  border-bottom: 3px solid transparent;
+
+  &:hover {
+    color: var(--fa-color-text);
+  }
+
+  @include fa-focus-visible;
+}
+
+.header__link--active {
+  font-weight: 600;
+  color: var(--fa-color-text);
+  border-bottom-color: var(--fa-color-accent);
+}
