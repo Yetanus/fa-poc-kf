@@ -12,7 +12,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "npm run test --workspaces --if-present"
+    "test": "npm run test --workspaces --if-present",
+    "codegen": "npm run codegen --workspaces --if-present"
   },
   "engines": {
     "node": ">=22.22.3"

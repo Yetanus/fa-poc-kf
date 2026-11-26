@@ -1,0 +1,15 @@
+<div class="notifications" aria-live="polite">
+  @for (notification of notifications(); track notification.id) {
+    <div class="notification" [class.notification--error]="notification.kind === 'error'">
+      <p class="notification__message">{{ notification.message }}</p>
+      <button
+        type="button"
+        class="notification__close"
+        aria-label="Zamknij powiadomienie"
+        (click)="store.dismiss(notification.id)"
+      >
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+  }
+</div>

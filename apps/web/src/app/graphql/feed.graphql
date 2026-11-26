@@ -1,0 +1,32 @@
+fragment NewsItemFields on NewsItem {
+  id
+  source
+  title
+  url
+  summary
+  imageUrl
+  publishedAt
+  score
+  commentsCount
+  readTimeMinutes
+  tags
+  author {
+    name
+    profileUrl
+  }
+}
+
+query Feed($filter: FeedFilter, $first: Int, $after: String) {
+  feed(filter: $filter, first: $first, after: $after) {
+    edges {
+      cursor
+      node {
+        ...NewsItemFields
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}

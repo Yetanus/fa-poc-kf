@@ -1,0 +1,51 @@
+@use 'mixins' as *;
+
+:host {
+  position: fixed;
+  inset-block-end: var(--fa-space-4);
+  inset-inline-end: var(--fa-space-4);
+  z-index: 20;
+  width: min(24rem, calc(100vw - 2 * var(--fa-space-4)));
+}
+
+.notifications {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fa-space-2);
+}
+
+.notification {
+  @include fa-card-surface;
+
+  display: flex;
+  align-items: flex-start;
+  gap: var(--fa-space-3);
+  padding: var(--fa-space-3) var(--fa-space-4);
+  color: var(--fa-color-text);
+}
+
+.notification--error {
+  border-inline-start: 4px solid var(--fa-color-danger);
+}
+
+.notification__message {
+  flex: 1;
+}
+
+.notification__close {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2rem;
+  min-height: 2rem;
+  font-size: var(--fa-font-size-lg);
+  line-height: 1;
+  background: transparent;
+  border: 0;
+  border-radius: var(--fa-radius-sm);
+
+  &:hover {
+    background: var(--fa-color-surface);
+  }
+
+  @include fa-focus-visible;
+}
