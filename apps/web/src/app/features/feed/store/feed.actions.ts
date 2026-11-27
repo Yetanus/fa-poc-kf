@@ -1,11 +1,12 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import type { FeedPageResult } from '../feed.models';
+import type { FeedFilters, FeedPageResult } from '../feed.models';
 
 export const FeedActions = createActionGroup({
   source: 'Feed',
   events: {
-    Opened: emptyProps(),
+    Opened: props<{ filters: FeedFilters }>(),
     Retried: emptyProps(),
+    'Filters Changed': props<{ filters: FeedFilters }>(),
     'Next Page Requested': emptyProps(),
   },
 });

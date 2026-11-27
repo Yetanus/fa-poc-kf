@@ -36,17 +36,18 @@ function matchesFilters(item: FeedItem, filters: FeedFilters): boolean {
   return filters.tags.length === 0 || filters.tags.some((tag) => item.tags.includes(tag));
 }
 
+function loadingFirstPage(state: FeedState): FeedState {
+  return { ...state, status: 'loading', error: null, endCursor: null, hasNextPage: false };
+}
+
 export const feedFeature = createFeature({
   name: 'feed',
   reducer: createReducer(
     initialFeedState,
-    on(FeedActions.opened, FeedActions.retried, (state): FeedState => ({
-      ...state,
-      status: 'loading',
-      error: null,
-      endCursor: null,
-      hasNextPage: false,
-    })),
+    on(FeedActions.opened, FeedActions.filtersChanged, (state, { filters }) =>
+      loadingFirstPage({ ...state, filters }),
+    ),
+    on(FeedActions.retried, loadingFirstPage),
     on(FeedActions.nextPageRequested, (state): FeedState =>
       state.hasNextPage && state.status === 'loaded' ? { ...state, status: 'loadingMore' } : state,
     ),

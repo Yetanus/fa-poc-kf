@@ -1,0 +1,109 @@
+@use 'mixins' as *;
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--fa-space-4) var(--fa-space-6);
+  align-items: start;
+  padding: var(--fa-space-4);
+  background: var(--fa-color-surface);
+  border: 1px solid var(--fa-color-border);
+  border-radius: var(--fa-radius-md);
+}
+
+.filters__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fa-space-2);
+  min-width: 0;
+}
+
+.filters__sources {
+  padding: 0;
+  border: 0;
+}
+
+.filters__label {
+  padding: 0;
+  font-size: var(--fa-font-size-sm);
+  font-weight: 600;
+}
+
+.filters__input {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: var(--fa-space-2) var(--fa-space-3);
+  background: var(--fa-color-bg);
+  border: 1px solid var(--fa-color-text-muted);
+  border-radius: var(--fa-radius-sm);
+}
+
+.filters__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--fa-space-4);
+}
+
+.filters__option {
+  display: inline-flex;
+  gap: var(--fa-space-2);
+  align-items: center;
+  min-height: 2.75rem;
+  cursor: pointer;
+
+  input {
+    width: 1.125rem;
+    height: 1.125rem;
+    accent-color: var(--fa-color-accent);
+  }
+}
+
+.filters__error {
+  font-size: var(--fa-font-size-sm);
+  color: var(--fa-color-danger);
+}
+
+.filters__tag-row {
+  display: flex;
+  gap: var(--fa-space-2);
+
+  .fa-button {
+    flex-shrink: 0;
+  }
+}
+
+.filters__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--fa-space-2);
+  padding: 0;
+  list-style: none;
+}
+
+.filters__chip {
+  display: inline-flex;
+  gap: var(--fa-space-1);
+  align-items: center;
+  padding-inline: var(--fa-space-3) var(--fa-space-1);
+  font-size: var(--fa-font-size-sm);
+  background: var(--fa-color-surface-raised);
+  border: 1px solid var(--fa-color-border);
+  border-radius: var(--fa-radius-lg);
+}
+
+.filters__chip-remove {
+  display: inline-grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  color: var(--fa-color-text-muted);
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+
+  &:hover {
+    color: var(--fa-color-text);
+    background: var(--fa-color-surface);
+  }
+}

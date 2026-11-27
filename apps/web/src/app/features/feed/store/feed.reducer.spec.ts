@@ -28,7 +28,10 @@ function page(items: FeedItem[], endCursor: string | null = 'next'): FeedPageRes
 
 describe('feed reducer', () => {
   it('replaces items with the first page sorted by date', () => {
-    const loading = reducer(initialFeedState, FeedActions.opened());
+    const loading = reducer(
+      initialFeedState,
+      FeedActions.opened({ filters: initialFeedState.filters }),
+    );
     expect(loading.status).toBe('loading');
 
     const state = reducer(

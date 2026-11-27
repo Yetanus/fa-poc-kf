@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { catchError, exhaustMap, filter, map, of, switchMap, withLatestFrom } from 'rxjs';
+import { catchError, exhaustMap, filter, map, mergeMap, of, switchMap, withLatestFrom } from 'rxjs';
 import { ApiError } from '../../../core/api/api-error';
 import { FeedApi } from '../feed-api';
 import { FeedActions, FeedApiActions } from './feed.actions';
@@ -17,6 +17,22 @@ export const loadFirstPage = createEffect(
       ofType(FeedActions.opened, FeedActions.retried),
       withLatestFrom(store.select(feedFeature.selectFilters)),
       switchMap(([, filters]) =>
+        api.loadPage(filters, null).pipe(
+          map((page) => FeedApiActions.pageLoaded({ page, append: false })),
+          catchError((error: unknown) =>
+            of(FeedApiActions.pageFailed({ error: errorMessage(error) })),
+          ),
+        ),
+      ),
+    ),
+  { functional: true },
+);
+
+export const searchFeed = createEffect(
+  (actions$ = inject(Actions), api = inject(FeedApi)) =>
+    actions$.pipe(
+      ofType(FeedActions.filtersChanged),
+      mergeMap(({ filters }) =>
         api.loadPage(filters, null).pipe(
           map((page) => FeedApiActions.pageLoaded({ page, append: false })),
           catchError((error: unknown) =>

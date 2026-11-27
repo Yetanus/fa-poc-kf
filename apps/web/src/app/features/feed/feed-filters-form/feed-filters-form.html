@@ -1,0 +1,68 @@
+<form class="filters" role="search" [formGroup]="form">
+  <div class="filters__field">
+    <label class="filters__label" for="feed-search">Szukaj</label>
+    <input
+      id="feed-search"
+      class="filters__input"
+      type="search"
+      formControlName="search"
+      autocomplete="off"
+      placeholder="np. angular, starship"
+    />
+  </div>
+
+  <fieldset
+    class="filters__field filters__sources"
+    formGroupName="sources"
+    [attr.aria-describedby]="form.controls.sources.invalid ? 'feed-sources-error' : null"
+  >
+    <legend class="filters__label">Źródła</legend>
+    <div class="filters__options">
+      @for (source of sources; track source) {
+        <label class="filters__option">
+          <input type="checkbox" [formControlName]="source" />
+          {{ source | sourceLabel }}
+        </label>
+      }
+    </div>
+    @if (form.controls.sources.invalid) {
+      <p id="feed-sources-error" class="filters__error" role="alert">
+        Wybierz co najmniej jedno źródło.
+      </p>
+    }
+  </fieldset>
+
+  <div class="filters__field">
+    <label class="filters__label" for="feed-tag">Tagi</label>
+    <div class="filters__tag-row">
+      <input
+        #tagInput
+        id="feed-tag"
+        class="filters__input"
+        type="text"
+        [formControl]="tagControl"
+        (keydown.enter)="addTag($event)"
+        autocomplete="off"
+        placeholder="np. javascript"
+      />
+      <button type="button" class="fa-button" (click)="addTag()">Dodaj tag</button>
+    </div>
+    @if (filters().tags.length > 0) {
+      <ul class="filters__chips" aria-label="Wybrane tagi">
+        @for (tag of filters().tags; track tag) {
+          <li class="filters__chip">
+            #{{ tag }}
+            <button
+              type="button"
+              class="filters__chip-remove"
+              [attr.aria-label]="'Usuń tag ' + tag"
+              (click)="removeTag(tag)"
+            >
+              <span aria-hidden="true">✕</span>
+            </button>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+</form>

@@ -3,6 +3,8 @@
   <p class="fa-text-muted">Wiadomości z Hacker News, Spaceflight News i Dev.to.</p>
 </header>
 
+<app-feed-filters-form [filters]="filters()" (filtersChange)="changeFilters($event)" />
+
 @if (sourceErrors().length > 0) {
   <app-source-errors-banner [errors]="sourceErrors()" (retry)="retry()" />
 }

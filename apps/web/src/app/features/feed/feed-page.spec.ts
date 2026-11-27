@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import type { FeedItem } from './feed.models';
 import { FeedPage } from './feed-page';
@@ -46,7 +47,7 @@ describe('FeedPage', () => {
   function render(state: FeedState) {
     TestBed.configureTestingModule({
       imports: [FeedPage],
-      providers: [provideMockStore({ initialState: { feed: state } })],
+      providers: [provideRouter([]), provideMockStore({ initialState: { feed: state } })],
     });
     store = TestBed.inject(MockStore);
     vi.spyOn(store, 'dispatch');
@@ -58,7 +59,9 @@ describe('FeedPage', () => {
   it('asks for the feed and shows skeletons while loading', () => {
     const element = render({ ...initialFeedState, status: 'loading' });
 
-    expect(store.dispatch).toHaveBeenCalledWith(FeedActions.opened());
+    expect(store.dispatch).toHaveBeenCalledWith(
+      FeedActions.opened({ filters: initialFeedState.filters }),
+    );
     expect(element.querySelectorAll('.feed-page__skeleton')).toHaveLength(6);
     expect(element.querySelector('app-news-card')).toBeNull();
   });
