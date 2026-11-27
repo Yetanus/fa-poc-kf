@@ -40,7 +40,7 @@ export const feedFeature = createFeature({
   name: 'feed',
   reducer: createReducer(
     initialFeedState,
-    on(FeedActions.opened, (state): FeedState => ({
+    on(FeedActions.opened, FeedActions.retried, (state): FeedState => ({
       ...state,
       status: 'loading',
       error: null,

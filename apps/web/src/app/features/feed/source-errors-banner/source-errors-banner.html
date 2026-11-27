@@ -1,0 +1,11 @@
+<div class="banner" role="status">
+  <span class="banner__icon" aria-hidden="true">⚠</span>
+  <p class="banner__text">
+    Nie udało się pobrać wiadomości z:
+    @for (error of errors(); track error.source) {
+      <strong>{{ error.source | sourceLabel }}</strong>{{ $last ? '.' : ', ' }}
+    }
+    Pokazujemy wyniki z pozostałych źródeł.
+  </p>
+  <button type="button" class="fa-button" (click)="retry.emit()">Spróbuj ponownie</button>
+</div>

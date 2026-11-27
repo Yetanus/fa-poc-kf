@@ -5,6 +5,7 @@ export const FeedActions = createActionGroup({
   source: 'Feed',
   events: {
     Opened: emptyProps(),
+    Retried: emptyProps(),
     'Next Page Requested': emptyProps(),
   },
 });

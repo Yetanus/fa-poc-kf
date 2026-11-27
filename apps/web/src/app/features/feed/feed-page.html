@@ -1,0 +1,35 @@
+<header class="feed-page__header">
+  <h1>Najnowsze wiadomości</h1>
+  <p class="fa-text-muted">Wiadomości z Hacker News, Spaceflight News i Dev.to.</p>
+</header>
+
+@if (sourceErrors().length > 0) {
+  <app-source-errors-banner [errors]="sourceErrors()" (retry)="retry()" />
+}
+
+@if (error()) {
+  <div class="feed-page__error" role="alert">
+    <span class="feed-page__error-icon" aria-hidden="true">⚠</span>
+    <p class="feed-page__error-text">Nie udało się wczytać wiadomości.</p>
+    <button type="button" class="fa-button" (click)="retry()">Spróbuj ponownie</button>
+  </div>
+}
+
+@if (showSkeletons()) {
+  <ul class="fa-grid feed-page__grid" aria-hidden="true">
+    @for (skeleton of skeletons; track skeleton) {
+      <li class="feed-page__skeleton"></li>
+    }
+  </ul>
+  <p class="fa-visually-hidden" role="status">Ładowanie wiadomości…</p>
+} @else if (!error() || items().length > 0) {
+  <ul class="fa-grid feed-page__grid" [attr.aria-busy]="isLoading()">
+    @for (item of items(); track $index) {
+      <li class="feed-page__item" [class.feed-page__item--featured]="$first && !!item.imageUrl">
+        <app-news-card [item]="item" [priority]="item.id === priorityId()" />
+      </li>
+    } @empty {
+      <li class="feed-page__empty">Brak wiadomości do wyświetlenia.</li>
+    }
+  </ul>
+}

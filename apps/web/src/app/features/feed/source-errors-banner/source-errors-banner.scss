@@ -1,0 +1,19 @@
+.banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--fa-space-3);
+  padding: var(--fa-space-3) var(--fa-space-4);
+  background: var(--fa-color-surface);
+  border: 1px solid var(--fa-color-border);
+  border-inline-start: 4px solid var(--fa-color-danger);
+  border-radius: var(--fa-radius-md);
+}
+
+.banner__icon {
+  color: var(--fa-color-danger);
+}
+
+.banner__text {
+  flex: 1 1 20rem;
+}

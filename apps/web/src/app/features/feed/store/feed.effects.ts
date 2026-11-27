@@ -14,7 +14,7 @@ function errorMessage(error: unknown): string {
 export const loadFirstPage = createEffect(
   (actions$ = inject(Actions), store = inject(Store), api = inject(FeedApi)) =>
     actions$.pipe(
-      ofType(FeedActions.opened),
+      ofType(FeedActions.opened, FeedActions.retried),
       withLatestFrom(store.select(feedFeature.selectFilters)),
       switchMap(([, filters]) =>
         api.loadPage(filters, null).pipe(

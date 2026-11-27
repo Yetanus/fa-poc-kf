@@ -1,10 +1,13 @@
 import {
   ApplicationConfig,
   ErrorHandler,
+  LOCALE_ID,
   isDevMode,
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import localePl from '@angular/common/locales/pl';
 import { TitleStrategy, provideRouter } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
@@ -14,8 +17,11 @@ import { errorInterceptor } from './core/api/error.interceptor';
 import { AppErrorHandler } from './core/errors/app-error-handler';
 import { PageTitleStrategy } from './core/layout/page-title.strategy';
 
+registerLocaleData(localePl);
+
 export const appConfig: ApplicationConfig = {
   providers: [
+    { provide: LOCALE_ID, useValue: 'pl' },
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(withInterceptors([errorInterceptor])),

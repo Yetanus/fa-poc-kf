@@ -8,3 +8,16 @@
   outline: 2px solid transparent;
   box-shadow: var(--fa-focus-ring);
 }
+
+.fa-button {
+  min-height: 2.75rem;
+  padding: var(--fa-space-2) var(--fa-space-4);
+  color: var(--fa-color-text);
+  background: var(--fa-color-surface-raised);
+  border: 1px solid var(--fa-color-border);
+  border-radius: var(--fa-radius-sm);
+
+  &:hover {
+    background: var(--fa-color-bg);
+  }
+}

@@ -17,6 +17,8 @@
 
 .app__main {
   grid-area: main;
+  // lazy route renders after the shell, without this the footer jumps down (CLS)
+  min-height: 100dvh;
   padding-block: var(--fa-space-8);
 }
 
