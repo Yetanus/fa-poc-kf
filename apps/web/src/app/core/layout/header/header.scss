@@ -20,7 +20,8 @@
 .header__title {
   font-size: var(--fa-font-size-lg);
   font-weight: 700;
-  color: #222;
+  /* use token so header follows theme (was hardcoded #222) */
+  color: var(--fa-color-text);
   text-decoration: none;
   border-radius: var(--fa-radius-sm);
 
