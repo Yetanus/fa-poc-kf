@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import type { NewsSource, TypedDocumentString } from '../../graphql/generated/graphql';
 import { ApiError } from './api-error';
+import { isNewsSource } from './news-sources';
 
 interface GraphqlErrorPayload {
   message: string;
@@ -22,12 +23,6 @@ export interface SourceError {
 export interface GraphqlResult<T> {
   data: T;
   sourceErrors: SourceError[];
-}
-
-const SOURCES = new Set<string>(['HACKER_NEWS', 'SPACEFLIGHT', 'DEV_TO'] satisfies NewsSource[]);
-
-function isNewsSource(value: unknown): value is NewsSource {
-  return typeof value === 'string' && SOURCES.has(value);
 }
 
 function toResult<T>(response: GraphqlResponse<T>): GraphqlResult<T> {

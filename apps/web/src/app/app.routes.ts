@@ -5,7 +5,7 @@ export const routes: Routes = [
   {
     path: 'feed',
     title: 'Wiadomości',
-    loadComponent: () => import('./features/feed/feed-page').then((m) => m.FeedPage),
+    loadChildren: () => import('./features/feed/feed.routes'),
   },
   {
     path: 'about',
