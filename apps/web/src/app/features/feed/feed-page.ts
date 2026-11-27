@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { distinctUntilChanged, map } from 'rxjs';
+import { InViewportDirective } from '../../shared/directives/in-viewport.directive';
 import { NewsCard } from '../../shared/ui/news-card/news-card';
 import { FeedFiltersForm } from './feed-filters-form/feed-filters-form';
 import type { FeedFilters } from './feed.models';
@@ -13,7 +14,7 @@ import { feedFeature } from './store/feed.reducer';
 
 @Component({
   selector: 'app-feed-page',
-  imports: [FeedFiltersForm, NewsCard, SourceErrorsBanner],
+  imports: [FeedFiltersForm, InViewportDirective, NewsCard, SourceErrorsBanner],
   templateUrl: './feed-page.html',
   styleUrl: './feed-page.scss',
 })
@@ -28,6 +29,8 @@ export class FeedPage {
   protected readonly isLoading = this.store.selectSignal(feedFeature.selectIsLoading);
   protected readonly error = this.store.selectSignal(feedFeature.selectError);
   protected readonly sourceErrors = this.store.selectSignal(feedFeature.selectSourceErrors);
+  protected readonly hasNextPage = this.store.selectSignal(feedFeature.selectHasNextPage);
+  protected readonly nextPageFailed = this.store.selectSignal(feedFeature.selectNextPageFailed);
 
   protected readonly showSkeletons = computed(
     () => this.items().length === 0 && (this.isLoading() || this.status() === 'idle'),
@@ -54,6 +57,10 @@ export class FeedPage {
       queryParams: filtersToParams(filters),
       replaceUrl: true,
     });
+  }
+
+  protected loadMore(): void {
+    this.store.dispatch(FeedActions.nextPageRequested());
   }
 
   protected retry(): void {

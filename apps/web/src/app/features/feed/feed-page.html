@@ -34,4 +34,21 @@
       <li class="feed-page__empty">Brak wiadomości do wyświetlenia.</li>
     }
   </ul>
+
+  @if (items().length > 0) {
+    <div class="feed-page__more" role="status">
+      @if (nextPageFailed()) {
+        <p>Nie udało się wczytać kolejnych wiadomości.</p>
+        <button type="button" class="fa-button" (click)="loadMore()">Spróbuj ponownie</button>
+      } @else if (status() === 'loadingMore') {
+        <p class="fa-text-muted">Ładowanie kolejnych wiadomości…</p>
+      } @else if (status() === 'loaded') {
+        @if (hasNextPage()) {
+          <div class="feed-page__sentinel" (appInViewport)="loadMore()"></div>
+        } @else {
+          <p class="fa-text-muted">To już wszystkie wiadomości.</p>
+        }
+      }
+    </div>
+  }
 }

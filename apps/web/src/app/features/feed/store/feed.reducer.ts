@@ -13,6 +13,7 @@ export interface FeedState extends EntityState<FeedItem> {
   error: string | null;
   endCursor: string | null;
   hasNextPage: boolean;
+  nextPageFailed: boolean;
   sourceErrors: SourceError[];
 }
 
@@ -26,6 +27,7 @@ export const initialFeedState: FeedState = feedAdapter.getInitialState({
   error: null,
   endCursor: null,
   hasNextPage: false,
+  nextPageFailed: false,
   sourceErrors: [],
 });
 
@@ -37,7 +39,14 @@ function matchesFilters(item: FeedItem, filters: FeedFilters): boolean {
 }
 
 function loadingFirstPage(state: FeedState): FeedState {
-  return { ...state, status: 'loading', error: null, endCursor: null, hasNextPage: false };
+  return {
+    ...state,
+    status: 'loading',
+    error: null,
+    endCursor: null,
+    hasNextPage: false,
+    nextPageFailed: false,
+  };
 }
 
 export const feedFeature = createFeature({
@@ -49,7 +58,9 @@ export const feedFeature = createFeature({
     ),
     on(FeedActions.retried, loadingFirstPage),
     on(FeedActions.nextPageRequested, (state): FeedState =>
-      state.hasNextPage && state.status === 'loaded' ? { ...state, status: 'loadingMore' } : state,
+      state.hasNextPage && state.status === 'loaded'
+        ? { ...state, status: 'loadingMore', nextPageFailed: false }
+        : state,
     ),
     on(FeedApiActions.pageLoaded, (state, { page, append }): FeedState => {
       const next: FeedState = {
@@ -64,11 +75,11 @@ export const feedFeature = createFeature({
         ? feedAdapter.upsertMany(page.items, next)
         : feedAdapter.setAll(page.items, next);
     }),
-    on(FeedApiActions.pageFailed, (state, { error }): FeedState => ({
-      ...state,
-      status: 'error',
-      error,
-    })),
+    on(FeedApiActions.pageFailed, (state, { error }): FeedState =>
+      state.status === 'loadingMore'
+        ? { ...state, status: 'loaded', nextPageFailed: true }
+        : { ...state, status: 'error', error },
+    ),
   ),
   extraSelectors: ({ selectFeedState, selectFilters, selectStatus }) => {
     const { selectAll } = feedAdapter.getSelectors(selectFeedState);

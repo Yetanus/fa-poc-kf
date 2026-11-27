@@ -1,7 +1,17 @@
 import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { catchError, exhaustMap, filter, map, mergeMap, of, switchMap, withLatestFrom } from 'rxjs';
+import {
+  catchError,
+  exhaustMap,
+  filter,
+  map,
+  mergeMap,
+  of,
+  switchMap,
+  takeUntil,
+  withLatestFrom,
+} from 'rxjs';
 import { ApiError } from '../../../core/api/api-error';
 import { FeedApi } from '../feed-api';
 import { FeedActions, FeedApiActions } from './feed.actions';
@@ -58,6 +68,11 @@ export const loadNextPage = createEffect(
           map((page) => FeedApiActions.pageLoaded({ page, append: true })),
           catchError((error: unknown) =>
             of(FeedApiActions.pageFailed({ error: errorMessage(error) })),
+          ),
+          takeUntil(
+            actions$.pipe(
+              ofType(FeedActions.opened, FeedActions.retried, FeedActions.filtersChanged),
+            ),
           ),
         ),
       ),
