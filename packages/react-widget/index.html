@@ -1,13 +1,44 @@
 <!doctype html>
-<html lang="en">
+<html lang="pl">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>react-widget</title>
+    <title>fa-news-insights – strona dev</title>
+    <style>
+      body {
+        max-width: 60rem;
+        margin: 2rem auto;
+        padding-inline: 1rem;
+        font-family: system-ui, sans-serif;
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: center;
+        margin-block: 1rem;
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <h1>&lt;fa-news-insights&gt; – strona dev</h1>
+
+    <div id="slot">
+      <fa-news-insights id="insights"></fa-news-insights>
+    </div>
+
+    <div class="controls">
+      <button id="add" type="button">Dodaj wiadomość</button>
+      <button id="tag" type="button">Przełącz tag „space”</button>
+      <button id="theme" type="button">Przełącz motyw</button>
+      <button id="invalid" type="button">Dane z błędami</button>
+      <button id="toggle" type="button">Odłącz / podłącz</button>
+    </div>
+
+    <h2>Log</h2>
+    <pre id="log"></pre>
+
+    <script type="module" src="/dev/main.ts"></script>
   </body>
 </html>
