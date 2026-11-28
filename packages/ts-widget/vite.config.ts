@@ -10,7 +10,7 @@ export default defineConfig({
     lib: {
       entry: 'src/index.ts',
       formats: ['es'],
-      fileName: 'index',
+      fileName: 'fa-news-ticker',
     },
   },
   test: {

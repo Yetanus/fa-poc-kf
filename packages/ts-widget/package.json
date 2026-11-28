@@ -3,12 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist/fa-news-ticker.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/fa-news-ticker.js"
     }
   },
   "files": [
@@ -20,6 +20,7 @@
     "test": "vitest run --passWithNoTests"
   },
   "devDependencies": {
+    "@fa/contracts": "*",
     "happy-dom": "^21.0.4",
     "typescript": "^7.0.2",
     "vite": "^8.3.8",

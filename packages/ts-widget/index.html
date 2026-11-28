@@ -3,29 +3,39 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ts-widget – strona dev</title>
+    <title>fa-news-ticker – strona dev</title>
     <style>
       body {
-        max-width: 40rem;
+        max-width: 60rem;
         margin: 2rem auto;
+        padding-inline: 1rem;
         font-family: system-ui, sans-serif;
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: center;
+        margin-block: 1rem;
       }
     </style>
   </head>
   <body>
-    <h1>BaseElement – strona dev</h1>
+    <h1>&lt;fa-news-ticker&gt; – strona dev</h1>
 
     <div id="slot">
-      <fa-demo-counter id="first" label="Kliknięcia"></fa-demo-counter>
+      <fa-news-ticker id="ticker" speed="60"></fa-news-ticker>
     </div>
-    <p>
-      <fa-demo-counter id="early" label="Ustawione przed define"></fa-demo-counter>
-    </p>
 
-    <p>
-      <button id="batch" type="button">3 zmiany naraz</button>
+    <div class="controls">
+      <label>
+        Prędkość (px/s)
+        <input id="speed" type="range" min="10" max="200" value="60" />
+      </label>
+      <button id="invalid" type="button">Dane z błędami</button>
       <button id="toggle" type="button">Odłącz / podłącz</button>
-    </p>
+    </div>
 
     <h2>Log</h2>
     <pre id="log"></pre>

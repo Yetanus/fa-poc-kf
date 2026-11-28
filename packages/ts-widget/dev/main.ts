@@ -1,11 +1,47 @@
-import { BaseElement } from '../src';
+import type { TickerItem } from '@fa/contracts';
+import { FaNewsTicker } from '../src';
 
-interface CounterProps {
-  label: string;
-  count: number;
-}
+const items: TickerItem[] = [
+  {
+    id: 'SPACEFLIGHT:1',
+    source: 'SPACEFLIGHT',
+    title: 'Starship lands on the Moon',
+    publishedAt: '2026-11-28T10:00:00Z',
+  },
+  {
+    id: 'HACKER_NEWS:2',
+    source: 'HACKER_NEWS',
+    title: 'Show HN: A tiny Web Component framework',
+    publishedAt: '2026-11-28T09:30:00Z',
+  },
+  {
+    id: 'DEV_TO:3',
+    source: 'DEV_TO',
+    title: 'Signals in Angular 22 – a practical guide',
+    publishedAt: '2026-11-28T09:00:00Z',
+  },
+  {
+    id: 'SPACEFLIGHT:4',
+    source: 'SPACEFLIGHT',
+    title: 'ESA confirms new Mars sample return plan',
+    publishedAt: '2026-11-28T08:45:00Z',
+  },
+  {
+    id: 'HACKER_NEWS:5',
+    source: 'HACKER_NEWS',
+    title: 'Ask HN: What are you working on?',
+    publishedAt: '2026-11-28T08:00:00Z',
+  },
+  {
+    id: 'DEV_TO:6',
+    source: 'DEV_TO',
+    title: 'requestAnimationFrame explained with a news ticker',
+    publishedAt: '2026-11-28T07:30:00Z',
+  },
+];
 
-const logElement = document.querySelector<HTMLPreElement>('#log');
+const logElement = document.querySelector('#log');
+const ticker = document.querySelector('fa-news-ticker');
 
 function log(message: string): void {
   if (logElement) {
@@ -13,75 +49,34 @@ function log(message: string): void {
   }
 }
 
-class DemoCounter extends BaseElement<CounterProps> {
-  static observedAttributes = ['label'];
+if (ticker) {
+  ticker.items = items;
 
-  private readonly button = document.createElement('button');
-  private renders = 0;
+  ticker.addEventListener('fa-ticker-select', (event) => {
+    log(`fa-ticker-select: ${event.detail.id}`);
+  });
 
-  constructor() {
-    super({ label: 'Licznik', count: 0 });
-    this.button.type = 'button';
-    this.button.addEventListener('click', () => {
-      this.count += 1;
-    });
-    this.root.append(this.button);
-  }
+  document.querySelector<HTMLInputElement>('#speed')?.addEventListener('input', (event) => {
+    if (event.target instanceof HTMLInputElement) {
+      ticker.speed = Number(event.target.value);
+    }
+  });
 
-  get count(): number {
-    return this.props.count;
-  }
+  document.querySelector('#invalid')?.addEventListener('click', () => {
+    const mixed: unknown[] = [...items, { id: 7, title: 'bez źródła' }, null, 'tekst'];
+    if (ticker instanceof FaNewsTicker) {
+      ticker.items = mixed;
+    }
+    log(`items: przekazano ${mixed.length}, wyświetlono ${ticker.items.length}`);
+  });
 
-  set count(value: number) {
-    this.setProps({ count: value });
-  }
-
-  protected override onConnect(): void {
-    this.upgradeProperty('count');
-    log('connected');
-  }
-
-  protected override onDisconnect(): void {
-    log('disconnected');
-  }
-
-  protected attributeToProps(name: string, value: string | null): Partial<CounterProps> {
-    return name === 'label' ? { label: value ?? '' } : {};
-  }
-
-  protected render(): void {
-    this.renders += 1;
-    this.button.textContent = `${this.props.label}: ${this.props.count}`;
-    log(`render #${this.renders} (label="${this.props.label}", count=${this.props.count})`);
-  }
+  document.querySelector('#toggle')?.addEventListener('click', () => {
+    if (ticker.isConnected) {
+      ticker.remove();
+      log('odłączono');
+    } else {
+      document.querySelector('#slot')?.append(ticker);
+      log('podłączono');
+    }
+  });
 }
-
-// set before define, upgradeProperty should pick it up
-const early = document.querySelector('#early');
-if (early) {
-  Object.assign(early, { count: 5 });
-}
-
-customElements.define('fa-demo-counter', DemoCounter);
-
-const first = document.querySelector('#first');
-
-document.querySelector('#batch')?.addEventListener('click', () => {
-  if (first instanceof DemoCounter) {
-    log('-- 3 changes in one task --');
-    first.count += 1;
-    first.count += 1;
-    first.setAttribute('label', `Kliknięcia ${first.count}`);
-  }
-});
-
-document.querySelector('#toggle')?.addEventListener('click', () => {
-  if (!first) {
-    return;
-  }
-  if (first.isConnected) {
-    first.remove();
-  } else {
-    document.querySelector('#slot')?.append(first);
-  }
-});
