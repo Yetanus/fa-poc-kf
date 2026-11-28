@@ -60,7 +60,7 @@ export class FaNewsInsights extends HTMLElement implements FaNewsInsightsElement
       this.root = createRoot(this.container);
       this.root.render(
         <StrictMode>
-          <InsightsApp host={this.hostProps} />
+          <InsightsApp host={this.hostProps} element={this} />
         </StrictMode>,
       );
     }

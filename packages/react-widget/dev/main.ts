@@ -9,7 +9,7 @@ function newsItem(id: string, source: NewsItem['source'], title: string, tags: s
     url: null,
     summary: null,
     imageUrl: null,
-    publishedAt: new Date(Date.now() - Number(id.split(':')[1]) * 3_600_000).toISOString(),
+    publishedAt: new Date(Date.now() - Number(id.split(':')[1]) * 9 * 3_600_000).toISOString(),
     authorName: null,
     score: null,
     commentsCount: null,
@@ -33,6 +33,21 @@ const items: NewsItem[] = [
   ]),
   newsItem('HACKER_NEWS:5', 'HACKER_NEWS', 'Ask HN: What are you working on?', []),
   newsItem('DEV_TO:6', 'DEV_TO', 'React 19 custom elements in practice', ['react', 'webdev']),
+  newsItem('SPACEFLIGHT:7', 'SPACEFLIGHT', 'New Glenn second launch scheduled', ['space', 'blue']),
+  newsItem('DEV_TO:8', 'DEV_TO', 'CSS container queries cheat sheet', ['css', 'webdev']),
+  newsItem('HACKER_NEWS:9', 'HACKER_NEWS', 'SQLite as an application file format', ['sqlite.org']),
+  newsItem('DEV_TO:10', 'DEV_TO', 'Testing custom elements with Vitest', ['testing', 'webdev']),
+  newsItem('SPACEFLIGHT:11', 'SPACEFLIGHT', 'NASA picks landing site for Artemis IV', [
+    'space',
+    'nasa',
+  ]),
+  newsItem('DEV_TO:12', 'DEV_TO', 'TypeScript 7 native compiler first look', ['typescript']),
+  newsItem('HACKER_NEWS:13', 'HACKER_NEWS', 'Postgres 19 released', ['postgresql.org']),
+  newsItem('DEV_TO:14', 'DEV_TO', 'Accessible toggle buttons', ['a11y', 'webdev', 'react']),
+  newsItem('SPACEFLIGHT:15', 'SPACEFLIGHT', 'Rocket Lab Neutron static fire', [
+    'space',
+    'rocketlab',
+  ]),
 ];
 
 const logElement = document.querySelector('#log');
@@ -46,6 +61,15 @@ function log(message: string): void {
 
 if (insights) {
   insights.items = items;
+
+  // the host owns activeTags, the widget only asks for a change
+  insights.addEventListener('fa-insights-tag-toggle', (event) => {
+    const { tag } = event.detail;
+    insights.activeTags = insights.activeTags.includes(tag)
+      ? insights.activeTags.filter((active) => active !== tag)
+      : [...insights.activeTags, tag];
+    log(`fa-insights-tag-toggle: ${tag} → [${insights.activeTags.join(', ')}]`);
+  });
 
   document.querySelector('#add')?.addEventListener('click', () => {
     const id = insights.items.length + 1;

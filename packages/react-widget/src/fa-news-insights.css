@@ -1,16 +1,41 @@
 :host {
   display: block;
-  color: var(--fa-color-text, #1a1a1a);
 }
 
+/* host tokens win, the fallbacks only matter when the widget is used on its own */
 .insights {
+  --text: var(--fa-color-text, #1a1a1a);
+  --muted: var(--fa-color-text-muted, #5c5c5c);
+  --surface: var(--fa-color-surface, #f5f5f5);
+  --raised: var(--fa-color-surface-raised, #ffffff);
+  --border: var(--fa-color-border, #d6d6d6);
+  --accent: var(--fa-color-accent, #3d3d3d);
+  --accent-contrast: var(--fa-color-accent-contrast, #ffffff);
+  --source-hn: var(--fa-color-source-hn, #4a4a4a);
+  --source-spaceflight: var(--fa-color-source-spaceflight, #6a6a6a);
+  --source-devto: var(--fa-color-source-devto, #2a2a2a);
+
   display: flex;
   flex-direction: column;
-  gap: var(--fa-space-3, 0.75rem);
+  gap: var(--fa-space-4, 1rem);
   padding: var(--fa-space-4, 1rem);
-  background: var(--fa-color-surface, #f5f5f5);
-  border: 1px solid var(--fa-color-border, #d6d6d6);
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: var(--fa-radius-md, 8px);
+}
+
+.insights[data-theme='dark'] {
+  --text: var(--fa-color-text, #ededed);
+  --muted: var(--fa-color-text-muted, #a8a8a8);
+  --surface: var(--fa-color-surface, #1e1e1e);
+  --raised: var(--fa-color-surface-raised, #262626);
+  --border: var(--fa-color-border, #3d3d3d);
+  --accent: var(--fa-color-accent, #d4d4d4);
+  --accent-contrast: var(--fa-color-accent-contrast, #121212);
+  --source-hn: var(--fa-color-source-hn, #b8b8b8);
+  --source-spaceflight: var(--fa-color-source-spaceflight, #939393);
+  --source-devto: var(--fa-color-source-devto, #dcdcdc);
 }
 
 .insights__title {
@@ -18,7 +43,139 @@
   font-size: var(--fa-font-size-lg, 1.125rem);
 }
 
-.insights__summary {
+.insights__block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fa-space-2, 0.5rem);
+}
+
+.insights__heading {
   margin: 0;
-  color: var(--fa-color-text-muted, #5c5c5c);
+  font-size: var(--fa-font-size-md, 1rem);
+}
+
+.insights__muted {
+  margin: 0;
+  color: var(--muted);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+button:focus-visible {
+  outline: 2px solid transparent;
+  box-shadow: var(--fa-focus-ring, 0 0 0 3px #000000);
+}
+
+.sources,
+.tags {
+  display: flex;
+  gap: var(--fa-space-2, 0.5rem);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.sources {
+  flex-direction: column;
+}
+
+.sources__item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--fa-space-1, 0.25rem) var(--fa-space-2, 0.5rem);
+  font-size: var(--fa-font-size-sm, 0.875rem);
+}
+
+.sources__item--hn {
+  --bar: var(--source-hn);
+}
+
+.sources__item--spaceflight {
+  --bar: var(--source-spaceflight);
+}
+
+.sources__item--devto {
+  --bar: var(--source-devto);
+}
+
+.sources__count {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.sources__bar {
+  grid-column: 1 / -1;
+  block-size: 0.5rem;
+  background: var(--bar);
+  border-radius: var(--fa-radius-sm, 4px);
+}
+
+.tags {
+  flex-wrap: wrap;
+}
+
+.tags__button {
+  display: inline-flex;
+  gap: var(--fa-space-1, 0.25rem);
+  align-items: center;
+  min-height: 2rem;
+  padding: 0 var(--fa-space-3, 0.75rem);
+  font-size: var(--fa-font-size-sm, 0.875rem);
+  background: var(--raised);
+  border: 1px solid var(--border);
+  border-radius: var(--fa-radius-lg, 16px);
+}
+
+.tags__button[aria-pressed='true'] {
+  color: var(--accent-contrast);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.tags__button[aria-pressed='true']::before {
+  content: '✓' / '';
+}
+
+.tags__count {
+  font-weight: 600;
+}
+
+.insights__more {
+  align-self: flex-start;
+  min-height: 2rem;
+  padding: 0 var(--fa-space-3, 0.75rem);
+  font-size: var(--fa-font-size-sm, 0.875rem);
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--fa-radius-sm, 4px);
+}
+
+.timeline {
+  display: block;
+  inline-size: 100%;
+  max-inline-size: 32rem;
+  block-size: auto;
+}
+
+.timeline__bar {
+  fill: var(--accent);
+}
+
+.timeline__value,
+.timeline__label {
+  font-size: 11px;
+  fill: var(--muted);
 }
