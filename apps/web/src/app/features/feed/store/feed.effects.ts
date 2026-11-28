@@ -6,7 +6,6 @@ import {
   exhaustMap,
   filter,
   map,
-  mergeMap,
   of,
   switchMap,
   takeUntil,
@@ -24,25 +23,10 @@ function errorMessage(error: unknown): string {
 export const loadFirstPage = createEffect(
   (actions$ = inject(Actions), store = inject(Store), api = inject(FeedApi)) =>
     actions$.pipe(
-      ofType(FeedActions.opened, FeedActions.retried),
+      ofType(FeedActions.opened, FeedActions.retried, FeedActions.filtersChanged),
       withLatestFrom(store.select(feedFeature.selectFilters)),
+      // switchMap cancels previous search request (mergeMap caused stale results)
       switchMap(([, filters]) =>
-        api.loadPage(filters, null).pipe(
-          map((page) => FeedApiActions.pageLoaded({ page, append: false })),
-          catchError((error: unknown) =>
-            of(FeedApiActions.pageFailed({ error: errorMessage(error) })),
-          ),
-        ),
-      ),
-    ),
-  { functional: true },
-);
-
-export const searchFeed = createEffect(
-  (actions$ = inject(Actions), api = inject(FeedApi)) =>
-    actions$.pipe(
-      ofType(FeedActions.filtersChanged),
-      mergeMap(({ filters }) =>
         api.loadPage(filters, null).pipe(
           map((page) => FeedApiActions.pageLoaded({ page, append: false })),
           catchError((error: unknown) =>
