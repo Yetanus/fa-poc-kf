@@ -1,5 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import type { FeedFilters, FeedPageResult } from '../feed.models';
+import type { FeedFilters, FeedItem, FeedPageResult } from '../feed.models';
 
 export const FeedActions = createActionGroup({
   source: 'Feed',
@@ -8,6 +8,7 @@ export const FeedActions = createActionGroup({
     Retried: emptyProps(),
     'Filters Changed': props<{ filters: FeedFilters }>(),
     'Next Page Requested': emptyProps(),
+    'New Items Shown': emptyProps(),
   },
 });
 
@@ -16,5 +17,6 @@ export const FeedApiActions = createActionGroup({
   events: {
     'Page Loaded': props<{ page: FeedPageResult; append: boolean }>(),
     'Page Failed': props<{ error: string }>(),
+    'Poll Succeeded': props<{ items: FeedItem[] }>(),
   },
 });

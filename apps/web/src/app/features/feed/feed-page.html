@@ -68,6 +68,14 @@
   <p class="feed-page__empty">Brak wiadomości do wyświetlenia.</p>
 }
 
+<div class="feed-page__new" aria-live="polite">
+  @if (pendingCount() > 0) {
+    <button type="button" class="feed-page__new-button" (click)="showNewItems()">
+      <span aria-hidden="true">↑</span> {{ pendingCount() | i18nPlural: newItemsPlural }}
+    </button>
+  }
+</div>
+
 @if (previewItem(); as item) {
   <app-news-preview-dialog [item]="item" (closed)="closePreview()" />
 }

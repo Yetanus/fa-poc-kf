@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import type { NewsSource, TypedDocumentString } from '../../graphql/generated/graphql';
 import { ApiError } from './api-error';
+import { SILENT_ERRORS } from './error.interceptor';
 import { isNewsSource } from './news-sources';
 
 interface GraphqlErrorPayload {
@@ -51,12 +52,16 @@ export class GraphqlClient {
   query<TResult, TVariables>(
     document: TypedDocumentString<TResult, TVariables>,
     variables?: TVariables,
+    options: { silent?: boolean } = {},
   ): Observable<GraphqlResult<TResult>> {
     return this.http
       .post<GraphqlResponse<TResult>>(
         '/graphql',
         { query: document.toString(), variables },
-        { timeout: 10_000 },
+        {
+          timeout: 10_000,
+          context: new HttpContext().set(SILENT_ERRORS, options.silent ?? false),
+        },
       )
       .pipe(map((response) => toResult(response)));
   }

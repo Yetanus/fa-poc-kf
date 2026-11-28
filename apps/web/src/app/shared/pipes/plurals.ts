@@ -6,3 +6,9 @@ export const COMMENTS_PLURAL = {
   few: '# komentarze',
   other: '# komentarzy',
 };
+
+export const NEW_ITEMS_PLURAL = {
+  '=1': 'Pokaż 1 nową wiadomość',
+  few: 'Pokaż # nowe wiadomości',
+  other: 'Pokaż # nowych wiadomości',
+};

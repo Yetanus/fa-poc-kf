@@ -14,6 +14,7 @@ export interface FeedState extends EntityState<FeedItem> {
   endCursor: string | null;
   hasNextPage: boolean;
   nextPageFailed: boolean;
+  pendingItems: FeedItem[];
   sourceErrors: SourceError[];
 }
 
@@ -28,6 +29,7 @@ export const initialFeedState: FeedState = feedAdapter.getInitialState({
   endCursor: null,
   hasNextPage: false,
   nextPageFailed: false,
+  pendingItems: [],
   sourceErrors: [],
 });
 
@@ -46,6 +48,7 @@ function loadingFirstPage(state: FeedState): FeedState {
     endCursor: null,
     hasNextPage: false,
     nextPageFailed: false,
+    pendingItems: [],
   };
 }
 
@@ -80,8 +83,22 @@ export const feedFeature = createFeature({
         ? { ...state, status: 'loaded', nextPageFailed: true }
         : { ...state, status: 'error', error },
     ),
+    on(FeedApiActions.pollSucceeded, (state, { items }): FeedState => {
+      if (state.status !== 'loaded') {
+        return state;
+      }
+      const fresh = items.filter(
+        (item) => !state.entities[item.id] && !state.pendingItems.some((p) => p.id === item.id),
+      );
+      return fresh.length > 0
+        ? { ...state, pendingItems: [...fresh, ...state.pendingItems] }
+        : state;
+    }),
+    on(FeedActions.newItemsShown, (state) =>
+      feedAdapter.upsertMany(state.pendingItems, { ...state, pendingItems: [] }),
+    ),
   ),
-  extraSelectors: ({ selectFeedState, selectFilters, selectStatus }) => {
+  extraSelectors: ({ selectFeedState, selectFilters, selectStatus, selectPendingItems }) => {
     const { selectAll } = feedAdapter.getSelectors(selectFeedState);
 
     return {
@@ -90,6 +107,7 @@ export const feedFeature = createFeature({
         items.filter((item) => matchesFilters(item, filters)),
       ),
       selectIsLoading: createSelector(selectStatus, (status) => status === 'loading'),
+      selectPendingCount: createSelector(selectPendingItems, (items) => items.length),
     };
   },
 });

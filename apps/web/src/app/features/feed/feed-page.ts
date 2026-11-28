@@ -1,6 +1,7 @@
 import {
   Component,
   DestroyRef,
+  afterNextRender,
   Injector,
   computed,
   inject,
@@ -8,14 +9,17 @@ import {
   viewChildren,
 } from '@angular/core';
 import { FocusKeyManager } from '@angular/cdk/a11y';
+import { I18nPluralPipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { distinctUntilChanged, map } from 'rxjs';
 import { InViewportDirective } from '../../shared/directives/in-viewport.directive';
+import { NEW_ITEMS_PLURAL } from '../../shared/pipes/plurals';
 import { NewsCard } from '../../shared/ui/news-card/news-card';
 import { FeedFiltersForm } from './feed-filters-form/feed-filters-form';
 import type { FeedFilters, FeedItem } from './feed.models';
+import { FeedPolling } from './feed-polling';
 import { filtersFromParams, filtersToParams, sameFilters } from './feed-query-params';
 import { NewsPreviewDialog } from './news-preview-dialog/news-preview-dialog';
 import { SourceErrorsBanner } from './source-errors-banner/source-errors-banner';
@@ -24,7 +28,15 @@ import { feedFeature } from './store/feed.reducer';
 
 @Component({
   selector: 'app-feed-page',
-  imports: [FeedFiltersForm, InViewportDirective, NewsCard, NewsPreviewDialog, SourceErrorsBanner],
+  imports: [
+    FeedFiltersForm,
+    I18nPluralPipe,
+    InViewportDirective,
+    NewsCard,
+    NewsPreviewDialog,
+    SourceErrorsBanner,
+  ],
+  providers: [FeedPolling],
   templateUrl: './feed-page.html',
   styleUrl: './feed-page.scss',
 })
@@ -32,6 +44,7 @@ export class FeedPage {
   private readonly store = inject(Store);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly injector = inject(Injector);
 
   protected readonly filters = this.store.selectSignal(feedFeature.selectFilters);
   protected readonly items = this.store.selectSignal(feedFeature.selectVisibleItems);
@@ -41,6 +54,8 @@ export class FeedPage {
   protected readonly sourceErrors = this.store.selectSignal(feedFeature.selectSourceErrors);
   protected readonly hasNextPage = this.store.selectSignal(feedFeature.selectHasNextPage);
   protected readonly nextPageFailed = this.store.selectSignal(feedFeature.selectNextPageFailed);
+  protected readonly pendingCount = this.store.selectSignal(feedFeature.selectPendingCount);
+  protected readonly newItemsPlural = NEW_ITEMS_PLURAL;
 
   protected readonly showSkeletons = computed(
     () => this.items().length === 0 && (this.isLoading() || this.status() === 'idle'),
@@ -50,7 +65,7 @@ export class FeedPage {
   protected readonly previewItem = signal<FeedItem | null>(null);
 
   private readonly cards = viewChildren(NewsCard);
-  private readonly keyManager = new FocusKeyManager(this.cards, inject(Injector))
+  private readonly keyManager = new FocusKeyManager(this.cards, this.injector)
     .withHorizontalOrientation('ltr')
     .withHomeAndEnd();
   private readonly activeIndex = signal(0);
@@ -74,6 +89,8 @@ export class FeedPage {
       .pipe(takeUntilDestroyed())
       .subscribe((index) => this.activeIndex.set(index));
     inject(DestroyRef).onDestroy(() => this.keyManager.destroy());
+
+    inject(FeedPolling).start();
   }
 
   protected changeFilters(filters: FeedFilters): void {
@@ -91,6 +108,11 @@ export class FeedPage {
   protected onCardFocus(index: number): void {
     this.keyManager.updateActiveItem(index);
     this.activeIndex.set(index);
+  }
+
+  protected showNewItems(): void {
+    this.store.dispatch(FeedActions.newItemsShown());
+    afterNextRender(() => this.keyManager.setFirstItemActive(), { injector: this.injector });
   }
 
   protected loadMore(): void {

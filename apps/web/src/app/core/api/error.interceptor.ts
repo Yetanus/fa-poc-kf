@@ -1,8 +1,10 @@
-import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { HttpContextToken, HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
 import { NotificationsStore } from '../notifications/notifications.store';
 import { ApiError } from './api-error';
+
+export const SILENT_ERRORS = new HttpContextToken<boolean>(() => false);
 
 function toApiError(error: HttpErrorResponse): ApiError {
   if (error.status === 0) {
@@ -25,7 +27,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       }
 
       const apiError = toApiError(error);
-      if (apiError.isGlobal) {
+      if (apiError.isGlobal && !req.context.get(SILENT_ERRORS)) {
         notifications.show(apiError.userMessage, 'error');
       }
       return throwError(() => apiError);
