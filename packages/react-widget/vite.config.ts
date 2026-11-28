@@ -1,5 +1,5 @@
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig(({ mode }) => ({
   plugins: [react()],
@@ -18,5 +18,8 @@ export default defineConfig(({ mode }) => ({
       formats: ['es'],
       fileName: 'fa-news-insights',
     },
+  },
+  test: {
+    environment: 'happy-dom',
   },
 }));
