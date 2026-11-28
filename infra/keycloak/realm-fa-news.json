@@ -1,0 +1,67 @@
+{
+  "realm": "fa-news",
+  "displayName": "FA News Hub",
+  "enabled": true,
+  "sslRequired": "external",
+  "registrationAllowed": false,
+  "resetPasswordAllowed": false,
+  "bruteForceProtected": true,
+  "accessTokenLifespan": 300,
+  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionMaxLifespan": 36000,
+  "roles": {
+    "realm": [
+      {
+        "name": "reader",
+        "description": "Zakładki i ustawienia"
+      },
+      {
+        "name": "admin",
+        "description": "Panel administratora"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "fa-news-web",
+      "name": "FA News Hub (Angular)",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "rootUrl": "http://localhost:4200",
+      "baseUrl": "/",
+      "redirectUris": ["http://localhost:4200/*"],
+      "webOrigins": ["+"],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://localhost:4200/*"
+      }
+    }
+  ],
+  "users": [
+    {
+      "username": "reader",
+      "enabled": true,
+      "email": "reader@fa-news.local",
+      "emailVerified": true,
+      "firstName": "Demo",
+      "lastName": "Reader",
+      "credentials": [{ "type": "password", "value": "reader", "temporary": false }],
+      "realmRoles": ["default-roles-fa-news", "reader"]
+    },
+    {
+      "username": "admin",
+      "enabled": true,
+      "email": "admin@fa-news.local",
+      "emailVerified": true,
+      "firstName": "Demo",
+      "lastName": "Admin",
+      "credentials": [{ "type": "password", "value": "admin", "temporary": false }],
+      "realmRoles": ["default-roles-fa-news", "reader", "admin"]
+    }
+  ]
+}

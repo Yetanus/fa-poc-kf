@@ -13,7 +13,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "npm run test --workspaces --if-present",
-    "codegen": "npm run codegen --workspaces --if-present"
+    "codegen": "npm run codegen --workspaces --if-present",
+    "infra:up": "docker compose -f infra/keycloak/docker-compose.yml up -d",
+    "infra:down": "docker compose -f infra/keycloak/docker-compose.yml down"
   },
   "engines": {
     "node": ">=22.22.3"

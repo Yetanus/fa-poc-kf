@@ -1,0 +1,15 @@
+# dev only: admin/admin and the demo users from the realm file must never reach production
+name: fa-news
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.8.2
+    container_name: fa-news-keycloak
+    command: start-dev --import-realm
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./realm-fa-news.json:/opt/keycloak/data/import/realm-fa-news.json:ro
