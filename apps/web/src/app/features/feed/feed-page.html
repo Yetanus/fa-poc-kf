@@ -32,7 +32,8 @@
     [attr.aria-busy]="isLoading() || status() === 'loadingMore'"
     (keydown)="onFeedKeydown($event)"
   >
-    @for (item of items(); track $index) {
+    <!-- track by id, $index re-rendered cards when new items were prepended -->
+    @for (item of items(); track item.id) {
       <div
         class="feed-page__item"
         [class.feed-page__item--featured]="$first && !!item.imageUrl"
