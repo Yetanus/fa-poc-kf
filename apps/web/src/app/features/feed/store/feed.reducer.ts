@@ -1,3 +1,4 @@
+import type { TickerItem } from '@fa/contracts';
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
 import type { SourceError } from '../../../core/api/graphql-client';
@@ -105,6 +106,11 @@ export const feedFeature = createFeature({
       selectAllItems: selectAll,
       selectVisibleItems: createSelector(selectAll, selectFilters, (items, filters) =>
         items.filter((item) => matchesFilters(item, filters)),
+      ),
+      selectTickerItems: createSelector(selectAll, (items): TickerItem[] =>
+        items
+          .slice(0, 10)
+          .map(({ id, source, title, publishedAt }) => ({ id, source, title, publishedAt })),
       ),
       selectIsLoading: createSelector(selectStatus, (status) => status === 'loading'),
       selectPendingCount: createSelector(selectPendingItems, (items) => items.length),

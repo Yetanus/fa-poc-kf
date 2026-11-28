@@ -70,9 +70,10 @@ export const tickerStyles = `
     text-decoration: underline;
   }
 
+  /* inset ring, outer one is cut off by overflow: hidden */
   button:focus-visible {
     outline: 2px solid transparent;
-    box-shadow: var(--fa-focus-ring, 0 0 0 3px #000000);
+    box-shadow: inset 0 0 0 3px var(--fa-color-focus, #000000);
   }
 
   .ticker__source {

@@ -43,7 +43,7 @@
   }
 
   <div class="preview__actions">
-    <a class="fa-button" [routerLink]="articleRoute(news)">Szczegóły</a>
+    <a class="fa-button" [routerLink]="articleRoute(news.id)">Szczegóły</a>
     @if (news.url; as url) {
       <a class="fa-button" [href]="url" target="_blank" rel="noopener noreferrer">
         Otwórz w źródle<span class="fa-visually-hidden"> (otwiera się w nowej karcie)</span>

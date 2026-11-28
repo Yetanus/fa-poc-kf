@@ -25,6 +25,7 @@ import { NewsPreviewDialog } from './news-preview-dialog/news-preview-dialog';
 import { SourceErrorsBanner } from './source-errors-banner/source-errors-banner';
 import { FeedActions } from './store/feed.actions';
 import { feedFeature } from './store/feed.reducer';
+import { TickerHost } from './ticker-host/ticker-host';
 
 @Component({
   selector: 'app-feed-page',
@@ -35,6 +36,7 @@ import { feedFeature } from './store/feed.reducer';
     NewsCard,
     NewsPreviewDialog,
     SourceErrorsBanner,
+    TickerHost,
   ],
   providers: [FeedPolling],
   templateUrl: './feed-page.html',

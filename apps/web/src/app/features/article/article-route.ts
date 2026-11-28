@@ -1,5 +1,4 @@
-import type { NewsSource } from '../../graphql/generated/graphql';
-
-export function articleRoute(item: { id: string; source: NewsSource }): string[] {
-  return ['/article', item.source, item.id.slice(item.id.indexOf(':') + 1)];
+export function articleRoute(id: string): string[] {
+  const separator = id.indexOf(':');
+  return ['/article', id.slice(0, separator), id.slice(separator + 1)];
 }

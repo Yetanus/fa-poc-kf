@@ -3,6 +3,12 @@
   <p class="fa-text-muted">Wiadomości z Hacker News, Spaceflight News i Dev.to.</p>
 </header>
 
+@defer (on viewport) {
+  <app-ticker-host class="feed-page__ticker" />
+} @placeholder {
+  <div class="feed-page__ticker"></div>
+}
+
 <app-feed-filters-form [filters]="filters()" (filtersChange)="changeFilters($event)" />
 
 @if (sourceErrors().length > 0) {

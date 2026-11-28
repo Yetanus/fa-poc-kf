@@ -12,6 +12,10 @@
   gap: var(--fa-space-2);
 }
 
+.feed-page__ticker {
+  min-height: calc(2.75rem + 2px);
+}
+
 .feed-page__grid {
   padding: 0;
   list-style: none;
