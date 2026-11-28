@@ -1,4 +1,13 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  Injector,
+  computed,
+  inject,
+  signal,
+  viewChildren,
+} from '@angular/core';
+import { FocusKeyManager } from '@angular/cdk/a11y';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -40,6 +49,15 @@ export class FeedPage {
   protected readonly skeletons = [1, 2, 3, 4, 5, 6];
   protected readonly previewItem = signal<FeedItem | null>(null);
 
+  private readonly cards = viewChildren(NewsCard);
+  private readonly keyManager = new FocusKeyManager(this.cards, inject(Injector))
+    .withHorizontalOrientation('ltr')
+    .withHomeAndEnd();
+  private readonly activeIndex = signal(0);
+  protected readonly tabbableIndex = computed(() =>
+    Math.min(this.activeIndex(), this.items().length - 1),
+  );
+
   constructor() {
     this.route.queryParamMap
       .pipe(
@@ -51,6 +69,11 @@ export class FeedPage {
         takeUntilDestroyed(),
       )
       .subscribe((action) => this.store.dispatch(action));
+
+    this.keyManager.change
+      .pipe(takeUntilDestroyed())
+      .subscribe((index) => this.activeIndex.set(index));
+    inject(DestroyRef).onDestroy(() => this.keyManager.destroy());
   }
 
   protected changeFilters(filters: FeedFilters): void {
@@ -59,6 +82,15 @@ export class FeedPage {
       queryParams: filtersToParams(filters),
       replaceUrl: true,
     });
+  }
+
+  protected onFeedKeydown(event: KeyboardEvent): void {
+    this.keyManager.onKeydown(event);
+  }
+
+  protected onCardFocus(index: number): void {
+    this.keyManager.updateActiveItem(index);
+    this.activeIndex.set(index);
   }
 
   protected loadMore(): void {

@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { ThemeService } from '../../theme/theme.service';
 import { ThemeToggle } from '../../theme/theme-toggle';
 
 @Component({
@@ -9,6 +10,8 @@ import { ThemeToggle } from '../../theme/theme-toggle';
   styleUrl: './header.scss',
 })
 export class Header {
+  protected readonly themeService = inject(ThemeService);
+
   protected readonly links = [
     { path: '/feed', label: 'Wiadomości' },
     { path: '/about', label: 'O projekcie' },

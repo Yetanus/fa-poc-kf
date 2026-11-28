@@ -1,5 +1,5 @@
 <header class="feed-page__header">
-  <h1>Najnowsze wiadomości</h1>
+  <h1 id="feed-title">Najnowsze wiadomości</h1>
   <p class="fa-text-muted">Wiadomości z Hacker News, Spaceflight News i Dev.to.</p>
 </header>
 
@@ -24,37 +24,48 @@
     }
   </ul>
   <p class="fa-visually-hidden" role="status">Ładowanie wiadomości…</p>
-} @else if (!error() || items().length > 0) {
-  <ul class="fa-grid feed-page__grid" [attr.aria-busy]="isLoading()">
+} @else if (items().length > 0) {
+  <div
+    class="fa-grid feed-page__grid"
+    role="feed"
+    aria-labelledby="feed-title"
+    [attr.aria-busy]="isLoading() || status() === 'loadingMore'"
+    (keydown)="onFeedKeydown($event)"
+  >
     @for (item of items(); track $index) {
-      <li class="feed-page__item" [class.feed-page__item--featured]="$first && !!item.imageUrl">
+      <div
+        class="feed-page__item"
+        [class.feed-page__item--featured]="$first && !!item.imageUrl"
+        (focusin)="onCardFocus($index)"
+      >
         <app-news-card
           [item]="item"
           [priority]="item.id === priorityId()"
+          [tabbable]="$index === tabbableIndex()"
+          [position]="$index + 1"
+          [setSize]="hasNextPage() ? -1 : items().length"
           (preview)="openPreview(item)"
         />
-      </li>
-    } @empty {
-      <li class="feed-page__empty">Brak wiadomości do wyświetlenia.</li>
+      </div>
     }
-  </ul>
+  </div>
 
-  @if (items().length > 0) {
-    <div class="feed-page__more" role="status">
-      @if (nextPageFailed()) {
-        <p>Nie udało się wczytać kolejnych wiadomości.</p>
-        <button type="button" class="fa-button" (click)="loadMore()">Spróbuj ponownie</button>
-      } @else if (status() === 'loadingMore') {
-        <p class="fa-text-muted">Ładowanie kolejnych wiadomości…</p>
-      } @else if (status() === 'loaded') {
-        @if (hasNextPage()) {
-          <div class="feed-page__sentinel" (appInViewport)="loadMore()"></div>
-        } @else {
-          <p class="fa-text-muted">To już wszystkie wiadomości.</p>
-        }
+  <div class="feed-page__more" role="status">
+    @if (nextPageFailed()) {
+      <p>Nie udało się wczytać kolejnych wiadomości.</p>
+      <button type="button" class="fa-button" (click)="loadMore()">Spróbuj ponownie</button>
+    } @else if (status() === 'loadingMore') {
+      <p class="fa-text-muted">Ładowanie kolejnych wiadomości…</p>
+    } @else if (status() === 'loaded') {
+      @if (hasNextPage()) {
+        <div class="feed-page__sentinel" (appInViewport)="loadMore()"></div>
+      } @else {
+        <p class="fa-text-muted">To już wszystkie wiadomości.</p>
       }
-    </div>
-  }
+    }
+  </div>
+} @else if (!error()) {
+  <p class="feed-page__empty">Brak wiadomości do wyświetlenia.</p>
 }
 
 @if (previewItem(); as item) {

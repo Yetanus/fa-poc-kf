@@ -1,9 +1,4 @@
-<button
-  type="button"
-  class="theme-toggle"
-  [attr.aria-pressed]="themeService.theme() === 'dark'"
-  (click)="themeService.toggle()"
->
-  <span aria-hidden="true">{{ themeService.theme() === 'dark' ? '☾' : '☀' }}</span>
+<button type="button" class="theme-toggle" [attr.aria-pressed]="dark()" (click)="toggle()">
+  <span aria-hidden="true">{{ dark() ? '☾' : '☀' }}</span>
   Ciemny motyw
 </button>

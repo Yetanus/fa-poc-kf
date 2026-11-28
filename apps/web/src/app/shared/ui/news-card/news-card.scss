@@ -107,3 +107,9 @@
 .news-card__preview {
   align-self: flex-start;
 }
+
+// FocusMonitor adds this class only for keyboard focus inside the card
+.news-card.cdk-keyboard-focused {
+  outline: 2px solid transparent;
+  box-shadow: var(--fa-focus-ring);
+}

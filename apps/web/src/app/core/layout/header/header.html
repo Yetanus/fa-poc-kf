@@ -19,6 +19,9 @@
       </ul>
     </nav>
 
-    <app-theme-toggle />
+    <app-theme-toggle
+      [dark]="themeService.theme() === 'dark'"
+      (darkChange)="themeService.setTheme($event ? 'dark' : 'light')"
+    />
   </div>
 </header>

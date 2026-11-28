@@ -37,8 +37,8 @@ export class ThemeService {
     });
   }
 
-  toggle(): void {
-    this.preference.set(this.theme() === 'dark' ? 'light' : 'dark');
+  setTheme(theme: Theme): void {
+    this.preference.set(theme);
   }
 
   private readPreference(): ThemePreference {

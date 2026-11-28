@@ -1,5 +1,4 @@
-import { Component, inject } from '@angular/core';
-import { ThemeService } from './theme.service';
+import { Component, model } from '@angular/core';
 
 @Component({
   selector: 'app-theme-toggle',
@@ -7,5 +6,9 @@ import { ThemeService } from './theme.service';
   styleUrl: './theme-toggle.scss',
 })
 export class ThemeToggle {
-  protected readonly themeService = inject(ThemeService);
+  readonly dark = model(false);
+
+  protected toggle(): void {
+    this.dark.update((dark) => !dark);
+  }
 }

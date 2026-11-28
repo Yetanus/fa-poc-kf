@@ -1,4 +1,5 @@
 import { inject } from '@angular/core';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import {
@@ -9,15 +10,42 @@ import {
   of,
   switchMap,
   takeUntil,
+  tap,
   withLatestFrom,
 } from 'rxjs';
 import { ApiError } from '../../../core/api/api-error';
+import { SOURCE_LABELS } from '../../../shared/pipes/source-label.pipe';
+import type { FeedPageResult } from '../feed.models';
 import { FeedApi } from '../feed-api';
 import { FeedActions, FeedApiActions } from './feed.actions';
 import { feedFeature } from './feed.reducer';
 
 function errorMessage(error: unknown): string {
   return error instanceof ApiError ? error.userMessage : 'Nie udało się pobrać wiadomości.';
+}
+
+const plural = new Intl.PluralRules('pl');
+const NEWS: Partial<Record<Intl.LDMLPluralRule, string>> = {
+  one: 'wiadomość',
+  few: 'wiadomości',
+  many: 'wiadomości',
+};
+const MORE_NEWS: Partial<Record<Intl.LDMLPluralRule, string>> = {
+  one: 'kolejną wiadomość',
+  few: 'kolejne wiadomości',
+  many: 'kolejnych wiadomości',
+};
+
+function pageLoadedMessage({ items, sourceErrors }: FeedPageResult, append: boolean): string {
+  const count = items.length;
+  const words = (append ? MORE_NEWS : NEWS)[plural.select(count)];
+  let message =
+    count === 0 && !append ? 'Brak wiadomości do wyświetlenia.' : `Załadowano ${count} ${words}.`;
+  if (sourceErrors.length > 0) {
+    const sources = sourceErrors.map((error) => SOURCE_LABELS[error.source]).join(', ');
+    message += ` Nie udało się pobrać wiadomości z: ${sources}.`;
+  }
+  return message;
 }
 
 export const loadFirstPage = createEffect(
@@ -62,4 +90,13 @@ export const loadNextPage = createEffect(
       ),
     ),
   { functional: true },
+);
+
+export const announcePageLoaded = createEffect(
+  (actions$ = inject(Actions), announcer = inject(LiveAnnouncer)) =>
+    actions$.pipe(
+      ofType(FeedApiActions.pageLoaded),
+      tap(({ page, append }) => void announcer.announce(pageLoadedMessage(page, append))),
+    ),
+  { functional: true, dispatch: false },
 );
