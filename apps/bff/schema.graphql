@@ -50,6 +50,14 @@ type SourceStatus {
   cachedAt: DateTime!
 }
 
+type User {
+  id: ID!
+  username: String!
+  name: String
+  email: String
+  roles: [String!]!
+}
+
 input FeedFilter {
   sources: [NewsSource!]
   search: String
@@ -59,5 +67,8 @@ input FeedFilter {
 type Query {
   feed(filter: FeedFilter, first: Int = 20, after: String): NewsConnection!
   item(id: ID!): NewsItem
-  sources: [SourceStatus!]!
+  "Requires the admin role. Nullable, so an auth error does not wipe the rest of the response."
+  sources: [SourceStatus!]
+  "Requires a logged in user."
+  me: User
 }

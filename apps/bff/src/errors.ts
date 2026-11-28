@@ -30,6 +30,39 @@ export class UpstreamError extends AppError {
   }
 }
 
+export class UnauthenticatedError extends AppError {
+  readonly code = 'UNAUTHENTICATED';
+
+  constructor(message = 'Authentication required') {
+    super(message);
+    this.name = 'UnauthenticatedError';
+  }
+}
+
+// bad or expired token -> HTTP 401, so the client knows it has to refresh it
+export class InvalidTokenError extends UnauthenticatedError {
+  constructor() {
+    super('Invalid or expired token');
+    this.name = 'InvalidTokenError';
+  }
+
+  override get extensions() {
+    return {
+      code: this.code,
+      http: { status: 401, headers: { 'WWW-Authenticate': 'Bearer error="invalid_token"' } },
+    };
+  }
+}
+
+export class ForbiddenError extends AppError {
+  readonly code = 'FORBIDDEN';
+
+  constructor(role: string) {
+    super(`Requires role: ${role}`);
+    this.name = 'ForbiddenError';
+  }
+}
+
 export class ValidationError extends AppError {
   readonly code = 'BAD_USER_INPUT';
 

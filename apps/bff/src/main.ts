@@ -25,12 +25,13 @@ const yoga = createYoga({
     isDev,
     maskError(error, message, dev, context) {
       const original = error instanceof GraphQLError ? error.originalError : error;
-      if (original instanceof AppError && error instanceof GraphQLError) {
+      if (original instanceof AppError) {
         const publicMessage =
           original instanceof UpstreamError ? original.publicMessage : original.message;
+        // errors from createContext (bad token) are not wrapped in GraphQLError
         return new GraphQLError(publicMessage, {
-          nodes: error.nodes,
-          path: error.path,
+          nodes: error instanceof GraphQLError ? error.nodes : null,
+          path: error instanceof GraphQLError ? error.path : undefined,
           extensions: original.extensions,
         });
       }

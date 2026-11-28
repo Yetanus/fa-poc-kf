@@ -3,6 +3,7 @@ import type { NewsSource } from '@fa/contracts';
 import type { Resolvers } from './generated/resolvers.js';
 import { devTo, spaceflight } from './adapters/index.js';
 import { aggregateFeed } from './aggregator.js';
+import { requireRole, requireUser } from './auth.js';
 import { checkSources } from './health.js';
 
 const ALL_SOURCES: NewsSource[] = ['HACKER_NEWS', 'SPACEFLIGHT', 'DEV_TO'];
@@ -29,7 +30,11 @@ export const resolvers: Resolvers = {
         pageInfo: { hasNextPage: result.nextCursor !== null, endCursor: result.nextCursor },
       };
     },
-    sources: (_parent, _args, { log }) => checkSources(log),
+    sources: (_parent, _args, context) => {
+      requireRole(context, 'admin');
+      return checkSources(context.log);
+    },
+    me: (_parent, _args, context) => requireUser(context),
     item: async (_parent, { id }, { hackerNews }) => {
       const [source, nativeId] = id.split(':');
       if (!nativeId) return null;

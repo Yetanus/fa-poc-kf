@@ -9,6 +9,8 @@ const envSchema = z.object({
   HACKER_NEWS_API_URL: z.url().default('https://hacker-news.firebaseio.com/v0'),
   HACKER_NEWS_SEARCH_URL: z.url().default('https://hn.algolia.com/api/v1'),
   DEV_TO_API_URL: z.url().default('https://dev.to/api'),
+  KEYCLOAK_ISSUER: z.url().default('http://localhost:8080/realms/fa-news'),
+  KEYCLOAK_CLIENT_ID: z.string().default('fa-news-web'),
 });
 
 export const config = envSchema.parse(process.env);

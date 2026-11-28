@@ -71,7 +71,10 @@ export type Query = {
   __typename?: 'Query';
   feed: NewsConnection;
   item?: Maybe<NewsItem>;
-  sources: Array<SourceStatus>;
+  /** Requires a logged in user. */
+  me?: Maybe<User>;
+  /** Requires the admin role. Nullable, so an auth error does not wipe the rest of the response. */
+  sources?: Maybe<Array<SourceStatus>>;
 };
 
 
@@ -93,6 +96,15 @@ export type SourceStatus = {
   lastError?: Maybe<Scalars['String']['output']>;
   latencyMs?: Maybe<Scalars['Int']['output']>;
   source: NewsSource;
+};
+
+export type User = {
+  __typename?: 'User';
+  email?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  roles: Array<Scalars['String']['output']>;
+  username: Scalars['String']['output'];
 };
 
 
@@ -182,6 +194,7 @@ export type ResolversTypes = {
   Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
   SourceStatus: ResolverTypeWrapper<SourceStatus>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  User: ResolverTypeWrapper<User>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -199,6 +212,7 @@ export type ResolversParentTypes = {
   Query: Record<PropertyKey, never>;
   SourceStatus: SourceStatus;
   String: Scalars['String']['output'];
+  User: User;
 };
 
 export type AuthorResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Author'] = ResolversParentTypes['Author']> = {
@@ -244,7 +258,8 @@ export type PageInfoResolvers<ContextType = GraphQLContext, ParentType extends R
 export type QueryResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   feed?: Resolver<ResolversTypes['NewsConnection'], ParentType, ContextType, RequireFields<QueryFeedArgs, 'first'>>;
   item?: Resolver<Maybe<ResolversTypes['NewsItem']>, ParentType, ContextType, RequireFields<QueryItemArgs, 'id'>>;
-  sources?: Resolver<Array<ResolversTypes['SourceStatus']>, ParentType, ContextType>;
+  me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  sources?: Resolver<Maybe<Array<ResolversTypes['SourceStatus']>>, ParentType, ContextType>;
 };
 
 export type SourceStatusResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['SourceStatus'] = ResolversParentTypes['SourceStatus']> = {
@@ -253,6 +268,14 @@ export type SourceStatusResolvers<ContextType = GraphQLContext, ParentType exten
   lastError?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   latencyMs?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   source?: Resolver<ResolversTypes['NewsSource'], ParentType, ContextType>;
+};
+
+export type UserResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  roles?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = GraphQLContext> = {
@@ -264,5 +287,6 @@ export type Resolvers<ContextType = GraphQLContext> = {
   PageInfo?: PageInfoResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   SourceStatus?: SourceStatusResolvers<ContextType>;
+  User?: UserResolvers<ContextType>;
 };
 

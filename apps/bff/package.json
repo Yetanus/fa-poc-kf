@@ -26,6 +26,7 @@
     "graphql": "^17.1.0",
     "graphql-scalars": "^2.0.1",
     "graphql-yoga": "^6.1.0",
+    "jose": "^6.2.18",
     "openapi-fetch": "^0.17.0",
     "zod": "^4.6.7"
   }
