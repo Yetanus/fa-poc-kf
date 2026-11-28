@@ -32,6 +32,7 @@ export class FaNewsTicker extends BaseElement<TickerProps> implements FaNewsTick
   private offset = 0;
   private hovered = false;
   private focused = false;
+  private rafId = 0;
 
   constructor() {
     super({ items: [], speed: DEFAULT_SPEED, paused: false });
@@ -107,7 +108,11 @@ export class FaNewsTicker extends BaseElement<TickerProps> implements FaNewsTick
     this.startLoop();
   }
 
+  // stop rAF loop and listeners on disconnect, otherwise loops stacked up
   protected override onDisconnect(): void {
+    cancelAnimationFrame(this.rafId);
+    window.removeEventListener('resize', this.onResize);
+    this.motionQuery.removeEventListener('change', this.onMotionChange);
     this.hovered = false;
     this.focused = false;
   }
@@ -177,10 +182,10 @@ export class FaNewsTicker extends BaseElement<TickerProps> implements FaNewsTick
       }
 
       last = time;
-      requestAnimationFrame(tick);
+      this.rafId = requestAnimationFrame(tick);
     };
 
-    requestAnimationFrame(tick);
+    this.rafId = requestAnimationFrame(tick);
   }
 
   private readonly onResize = throttle(() => {
