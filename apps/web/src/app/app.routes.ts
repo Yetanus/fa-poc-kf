@@ -8,6 +8,11 @@ export const routes: Routes = [
     loadChildren: () => import('./features/feed/feed.routes'),
   },
   {
+    path: 'article/:source/:id',
+    title: 'Artykuł',
+    loadComponent: () => import('./features/article/article-page').then((m) => m.ArticlePage),
+  },
+  {
     path: 'about',
     title: 'O projekcie',
     loadComponent: () => import('./features/about/about-page').then((m) => m.AboutPage),

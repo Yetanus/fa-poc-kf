@@ -1,0 +1,53 @@
+@let news = item();
+
+<section
+  class="preview"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="preview-title"
+  cdkTrapFocus
+  cdkTrapFocusAutoCapture
+>
+  <div class="preview__header">
+    <p class="preview__meta">
+      <span class="preview__source">{{ news.source | sourceLabel }}</span>
+      <span aria-hidden="true">·</span>
+      <time [attr.datetime]="news.publishedAt">{{
+        news.publishedAt | date: 'd MMMM y, HH:mm'
+      }}</time>
+    </p>
+    <button
+      type="button"
+      class="preview__close"
+      aria-label="Zamknij podgląd"
+      (click)="closed.emit()"
+    >
+      <span aria-hidden="true">✕</span>
+    </button>
+  </div>
+
+  <h2 id="preview-title" class="preview__title">{{ news.title }}</h2>
+
+  @if (news.summary; as summary) {
+    <p>{{ summary }}</p>
+  } @else {
+    <p class="fa-text-muted">To źródło nie podaje opisu.</p>
+  }
+
+  @if (news.tags.length > 0) {
+    <ul class="preview__tags" aria-label="Tagi">
+      @for (tag of news.tags; track tag) {
+        <li class="preview__tag">#{{ tag }}</li>
+      }
+    </ul>
+  }
+
+  <div class="preview__actions">
+    <a class="fa-button" [routerLink]="articleRoute(news)">Szczegóły</a>
+    @if (news.url; as url) {
+      <a class="fa-button" [href]="url" target="_blank" rel="noopener noreferrer">
+        Otwórz w źródle<span class="fa-visually-hidden"> (otwiera się w nowej karcie)</span>
+      </a>
+    }
+  </div>
+</section>

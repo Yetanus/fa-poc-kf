@@ -1,6 +1,7 @@
-import { Component, OnInit, input } from '@angular/core';
+import { Component, OnInit, input, output } from '@angular/core';
 import { DatePipe, I18nPluralPipe, NgOptimizedImage, SlicePipe } from '@angular/common';
 import type { FeedItem } from '../../../features/feed/feed.models';
+import { COMMENTS_PLURAL, POINTS_PLURAL } from '../../pipes/plurals';
 import { RelativeTimePipe } from '../../pipes/relative-time.pipe';
 import { SourceLabelPipe } from '../../pipes/source-label.pipe';
 
@@ -20,20 +21,12 @@ import { SourceLabelPipe } from '../../pipes/source-label.pipe';
 export class NewsCard implements OnInit {
   readonly item = input.required<FeedItem>();
   readonly priority = input(false);
+  readonly preview = output<void>();
 
   protected imagePriority = false;
 
-  protected readonly pointsPlural = {
-    '=1': '1 punkt',
-    few: '# punkty',
-    other: '# punktów',
-  };
-  protected readonly commentsPlural = {
-    '=0': 'brak komentarzy',
-    '=1': '1 komentarz',
-    few: '# komentarze',
-    other: '# komentarzy',
-  };
+  protected readonly pointsPlural = POINTS_PLURAL;
+  protected readonly commentsPlural = COMMENTS_PLURAL;
 
   // NgOptimizedImage throws when priority changes after init, so read it only once
   ngOnInit(): void {

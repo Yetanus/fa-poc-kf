@@ -1,0 +1,8 @@
+query Item($id: ID!) {
+  item(id: $id) {
+    ...NewsItemFields
+    author {
+      karma
+    }
+  }
+}

@@ -1,0 +1,127 @@
+@use 'mixins' as *;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fa-space-6);
+  max-width: 48rem;
+}
+
+.article-page__back {
+  align-self: flex-start;
+  color: var(--fa-color-text-muted);
+  text-decoration: none;
+  border-radius: var(--fa-radius-sm);
+
+  &:hover {
+    color: var(--fa-color-text);
+    text-decoration: underline;
+  }
+}
+
+.article-page__skeleton {
+  @include fa-card-surface;
+
+  min-height: 32rem;
+  animation: article-pulse 1.5s ease-in-out infinite;
+}
+
+.article-page__message {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fa-space-3);
+  align-items: flex-start;
+}
+
+.article {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fa-space-4);
+}
+
+.article__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--fa-space-2);
+  font-size: var(--fa-font-size-sm);
+  color: var(--fa-color-text-muted);
+}
+
+.article__source {
+  font-weight: 600;
+  color: var(--fa-color-text);
+}
+
+.article__media {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--fa-color-surface);
+  border-radius: var(--fa-radius-md);
+}
+
+.article__image {
+  object-fit: cover;
+}
+
+.article__summary {
+  font-size: var(--fa-font-size-lg);
+}
+
+.article__details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: var(--fa-space-4);
+  padding: var(--fa-space-4);
+  background: var(--fa-color-surface);
+  border-radius: var(--fa-radius-md);
+
+  dt {
+    font-size: var(--fa-font-size-sm);
+    color: var(--fa-color-text-muted);
+  }
+
+  dd {
+    margin: 0;
+    font-weight: 600;
+  }
+}
+
+.article__karma {
+  margin-inline-start: var(--fa-space-1);
+  font-weight: 400;
+  color: var(--fa-color-text-muted);
+}
+
+.article__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--fa-space-2);
+  padding: 0;
+  font-size: var(--fa-font-size-sm);
+  list-style: none;
+}
+
+.article__tag {
+  padding: 0 var(--fa-space-2);
+  background: var(--fa-color-surface);
+  border-radius: var(--fa-radius-sm);
+}
+
+.article__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--fa-space-3);
+
+  .fa-button {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+  }
+}
+
+@keyframes article-pulse {
+  50% {
+    opacity: 0.5;
+  }
+}

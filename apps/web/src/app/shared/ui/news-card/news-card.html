@@ -52,5 +52,14 @@
         }
       </ul>
     }
+
+    <button
+      type="button"
+      class="fa-button news-card__preview"
+      [attr.aria-label]="'Podgląd: ' + news.title"
+      (click)="preview.emit()"
+    >
+      Podgląd
+    </button>
   </div>
 </article>

@@ -16,15 +16,21 @@ import * as types from './graphql';
  */
 type Documents = {
     "fragment NewsItemFields on NewsItem {\n  id\n  source\n  title\n  url\n  summary\n  imageUrl\n  publishedAt\n  score\n  commentsCount\n  readTimeMinutes\n  tags\n  author {\n    name\n    profileUrl\n  }\n}\n\nquery Feed($filter: FeedFilter, $first: Int, $after: String) {\n  feed(filter: $filter, first: $first, after: $after) {\n    edges {\n      cursor\n      node {\n        ...NewsItemFields\n      }\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}": typeof types.NewsItemFieldsFragmentDoc,
+    "query Item($id: ID!) {\n  item(id: $id) {\n    ...NewsItemFields\n    author {\n      karma\n    }\n  }\n}": typeof types.ItemDocument,
 };
 const documents: Documents = {
     "fragment NewsItemFields on NewsItem {\n  id\n  source\n  title\n  url\n  summary\n  imageUrl\n  publishedAt\n  score\n  commentsCount\n  readTimeMinutes\n  tags\n  author {\n    name\n    profileUrl\n  }\n}\n\nquery Feed($filter: FeedFilter, $first: Int, $after: String) {\n  feed(filter: $filter, first: $first, after: $after) {\n    edges {\n      cursor\n      node {\n        ...NewsItemFields\n      }\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}": types.NewsItemFieldsFragmentDoc,
+    "query Item($id: ID!) {\n  item(id: $id) {\n    ...NewsItemFields\n    author {\n      karma\n    }\n  }\n}": types.ItemDocument,
 };
 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "fragment NewsItemFields on NewsItem {\n  id\n  source\n  title\n  url\n  summary\n  imageUrl\n  publishedAt\n  score\n  commentsCount\n  readTimeMinutes\n  tags\n  author {\n    name\n    profileUrl\n  }\n}\n\nquery Feed($filter: FeedFilter, $first: Int, $after: String) {\n  feed(filter: $filter, first: $first, after: $after) {\n    edges {\n      cursor\n      node {\n        ...NewsItemFields\n      }\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}"): typeof import('./graphql').NewsItemFieldsFragmentDoc;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "query Item($id: ID!) {\n  item(id: $id) {\n    ...NewsItemFields\n    author {\n      karma\n    }\n  }\n}"): typeof import('./graphql').ItemDocument;
 
 
 export function graphql(source: string) {

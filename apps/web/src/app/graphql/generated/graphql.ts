@@ -26,6 +26,13 @@ export type FeedQueryVariables = Exact<{
 
 export type FeedQuery = { feed: { edges: Array<{ cursor: string, node: { id: string, source: NewsSource, title: string, url: string | null, summary: string | null, imageUrl: string | null, publishedAt: string, score: number | null, commentsCount: number | null, readTimeMinutes: number | null, tags: Array<string>, author: { name: string, profileUrl: string | null } | null } }>, pageInfo: { hasNextPage: boolean, endCursor: string | null } } };
 
+export type ItemQueryVariables = Exact<{
+  id: string | number;
+}>;
+
+
+export type ItemQuery = { item: { id: string, source: NewsSource, title: string, url: string | null, summary: string | null, imageUrl: string | null, publishedAt: string, score: number | null, commentsCount: number | null, readTimeMinutes: number | null, tags: Array<string>, author: { karma: number | null, name: string, profileUrl: string | null } | null } | null };
+
 export class TypedDocumentString<TResult, TVariables>
   extends String
   implements DocumentTypeDecoration<TResult, TVariables>
@@ -95,3 +102,29 @@ export const FeedDocument = new TypedDocumentString(`
     profileUrl
   }
 }`) as unknown as TypedDocumentString<FeedQuery, FeedQueryVariables>;
+export const ItemDocument = new TypedDocumentString(`
+    query Item($id: ID!) {
+  item(id: $id) {
+    ...NewsItemFields
+    author {
+      karma
+    }
+  }
+}
+    fragment NewsItemFields on NewsItem {
+  id
+  source
+  title
+  url
+  summary
+  imageUrl
+  publishedAt
+  score
+  commentsCount
+  readTimeMinutes
+  tags
+  author {
+    name
+    profileUrl
+  }
+}`) as unknown as TypedDocumentString<ItemQuery, ItemQueryVariables>;

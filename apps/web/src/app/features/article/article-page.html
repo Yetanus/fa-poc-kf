@@ -1,0 +1,108 @@
+@let s = state();
+
+<a class="article-page__back" routerLink="/feed">
+  <span aria-hidden="true">←</span> Wróć do wiadomości
+</a>
+
+@if (s.status === 'loading') {
+  <div class="article-page__skeleton" aria-hidden="true"></div>
+  <p class="fa-visually-hidden" role="status">Ładowanie artykułu…</p>
+} @else if (s.status === 'error') {
+  <div class="article-page__message" role="alert">
+    <h1>Nie udało się wczytać artykułu</h1>
+    <p class="fa-text-muted">Spróbuj ponownie za chwilę.</p>
+    <button type="button" class="fa-button" (click)="retry()">Spróbuj ponownie</button>
+  </div>
+} @else if (s.status === 'notFound') {
+  <div class="article-page__message">
+    <h1>Nie znaleziono artykułu</h1>
+    <p class="fa-text-muted">Ten artykuł nie istnieje albo został usunięty ze źródła.</p>
+  </div>
+} @else {
+  @let item = s.item;
+  @let discussion = discussionUrl(item);
+
+  <article class="article" [attr.data-source]="item.source">
+    <p class="article__meta">
+      <span class="article__source">{{ item.source | sourceLabel }}</span>
+      <span aria-hidden="true">·</span>
+      <time [attr.datetime]="item.publishedAt">{{
+        item.publishedAt | date: 'd MMMM y, HH:mm'
+      }}</time>
+    </p>
+
+    <h1 class="article__title">{{ item.title }}</h1>
+
+    @if (item.imageUrl; as imageUrl) {
+      <div class="article__media">
+        <img class="article__image" [ngSrc]="imageUrl" fill priority alt="" />
+      </div>
+    }
+
+    @if (item.summary; as summary) {
+      <p class="article__summary">{{ summary }}</p>
+    }
+
+    <dl class="article__details">
+      @if (item.author; as author) {
+        <div>
+          <dt>Autor</dt>
+          <dd>
+            @if (author.profileUrl; as profileUrl) {
+              <a [href]="profileUrl" target="_blank" rel="noopener noreferrer"
+                >{{ author.name
+                }}<span class="fa-visually-hidden"> (otwiera się w nowej karcie)</span></a
+              >
+            } @else {
+              {{ author.name }}
+            }
+            @if (author.karma !== null) {
+              <span class="article__karma">(karma {{ author.karma }})</span>
+            }
+          </dd>
+        </div>
+      }
+      @if (item.score !== null) {
+        <div>
+          <dt>Punkty</dt>
+          <dd>{{ item.score | i18nPlural: pointsPlural }}</dd>
+        </div>
+      }
+      @if (item.commentsCount !== null) {
+        <div>
+          <dt>Komentarze</dt>
+          <dd>{{ item.commentsCount | i18nPlural: commentsPlural }}</dd>
+        </div>
+      }
+      @if (item.readTimeMinutes !== null) {
+        <div>
+          <dt>Czas czytania</dt>
+          <dd>{{ item.readTimeMinutes }} min</dd>
+        </div>
+      }
+    </dl>
+
+    @if (item.tags.length > 0) {
+      <ul class="article__tags" aria-label="Tagi">
+        @for (tag of item.tags; track tag) {
+          <li class="article__tag">#{{ tag }}</li>
+        }
+      </ul>
+    }
+
+    <div class="article__actions">
+      @if (item.url; as url) {
+        <a class="fa-button" [href]="url" target="_blank" rel="noopener noreferrer">
+          Przeczytaj cały artykuł
+          <span class="fa-visually-hidden">(otwiera się w nowej karcie)</span>
+        </a>
+      }
+      @if (discussion) {
+        <a class="fa-button" [href]="discussion" target="_blank" rel="noopener noreferrer">
+          Dyskusja na Hacker News
+          <span class="fa-visually-hidden">(otwiera się w nowej karcie)</span>
+        </a>
+      }
+    </div>
+  </article>
+}
