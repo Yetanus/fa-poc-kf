@@ -9,6 +9,7 @@ export const FeedActions = createActionGroup({
     'Filters Changed': props<{ filters: FeedFilters }>(),
     'Next Page Requested': emptyProps(),
     'New Items Shown': emptyProps(),
+    'Tag Toggled': props<{ tag: string }>(),
   },
 });
 

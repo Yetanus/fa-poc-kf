@@ -25,6 +25,7 @@ import { NewsPreviewDialog } from './news-preview-dialog/news-preview-dialog';
 import { SourceErrorsBanner } from './source-errors-banner/source-errors-banner';
 import { FeedActions } from './store/feed.actions';
 import { feedFeature } from './store/feed.reducer';
+import { InsightsHost } from './insights-host/insights-host';
 import { TickerHost } from './ticker-host/ticker-host';
 
 @Component({
@@ -32,6 +33,7 @@ import { TickerHost } from './ticker-host/ticker-host';
   imports: [
     FeedFiltersForm,
     I18nPluralPipe,
+    InsightsHost,
     InViewportDirective,
     NewsCard,
     NewsPreviewDialog,
@@ -65,6 +67,7 @@ export class FeedPage {
   protected readonly priorityId = computed(() => this.items().find((item) => item.imageUrl)?.id);
   protected readonly skeletons = [1, 2, 3, 4, 5, 6];
   protected readonly previewItem = signal<FeedItem | null>(null);
+  protected readonly statsOpen = signal(false);
 
   private readonly cards = viewChildren(NewsCard);
   private readonly keyManager = new FocusKeyManager(this.cards, this.injector)
@@ -119,6 +122,10 @@ export class FeedPage {
 
   protected loadMore(): void {
     this.store.dispatch(FeedActions.nextPageRequested());
+  }
+
+  protected toggleStats(): void {
+    this.statsOpen.update((open) => !open);
   }
 
   protected openPreview(item: FeedItem): void {

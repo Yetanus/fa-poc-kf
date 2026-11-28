@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
 
-export interface WidgetEvent {
-  readonly type: 'ticker-select';
-  readonly id: string;
-}
+export type WidgetEvent =
+  | { readonly type: 'ticker-select'; readonly id: string }
+  | { readonly type: 'insights-tag-toggle'; readonly tag: string };
 
 @Injectable({ providedIn: 'root' })
 export class WidgetEvents {

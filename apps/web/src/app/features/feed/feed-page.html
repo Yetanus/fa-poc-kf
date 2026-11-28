@@ -11,6 +11,23 @@
 
 <app-feed-filters-form [filters]="filters()" (filtersChange)="changeFilters($event)" />
 
+<div class="feed-page__stats">
+  <button
+    type="button"
+    class="fa-button feed-page__stats-toggle"
+    aria-controls="feed-insights"
+    [attr.aria-expanded]="statsOpen()"
+    (click)="toggleStats()"
+  >
+    {{ statsOpen() ? 'Ukryj statystyki' : 'Pokaż statystyki' }}
+  </button>
+  <div id="feed-insights" [hidden]="!statsOpen()">
+    @defer (when statsOpen()) {
+      <app-insights-host />
+    }
+  </div>
+</div>
+
 @if (sourceErrors().length > 0) {
   <app-source-errors-banner [errors]="sourceErrors()" (retry)="retry()" />
 }

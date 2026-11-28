@@ -29,6 +29,16 @@ export function filtersToParams(filters: FeedFilters): Params {
   };
 }
 
+export function toggleTag(filters: FeedFilters, tag: string): FeedFilters {
+  const normalized = normalizeTag(tag);
+  return {
+    ...filters,
+    tags: filters.tags.includes(normalized)
+      ? filters.tags.filter((active) => active !== normalized)
+      : [...filters.tags, normalized],
+  };
+}
+
 function sameList(a: readonly string[], b: readonly string[]): boolean {
   return a.length === b.length && a.every((value, i) => value === b[i]);
 }

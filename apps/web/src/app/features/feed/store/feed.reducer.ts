@@ -112,6 +112,7 @@ export const feedFeature = createFeature({
           .slice(0, 10)
           .map(({ id, source, title, publishedAt }) => ({ id, source, title, publishedAt })),
       ),
+      selectActiveTags: createSelector(selectFilters, (filters) => filters.tags),
       selectIsLoading: createSelector(selectStatus, (status) => status === 'loading'),
       selectPendingCount: createSelector(selectPendingItems, (items) => items.length),
     };

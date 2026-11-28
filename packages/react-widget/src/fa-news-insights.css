@@ -1,5 +1,6 @@
 :host {
   display: block;
+  container-type: inline-size;
 }
 
 /* host tokens win, the fallbacks only matter when the widget is used on its own */
@@ -178,4 +179,18 @@ button:focus-visible {
 .timeline__label {
   font-size: 11px;
   fill: var(--muted);
+}
+
+/* after the base rules, otherwise .insights { display: flex } wins */
+@container (min-width: 48rem) {
+  .insights {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .insights__title,
+  .insights > .insights__muted {
+    grid-column: 1 / -1;
+  }
 }

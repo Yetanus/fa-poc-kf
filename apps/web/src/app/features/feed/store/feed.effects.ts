@@ -1,5 +1,6 @@
 import { inject } from '@angular/core';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import {
@@ -14,9 +15,11 @@ import {
   withLatestFrom,
 } from 'rxjs';
 import { ApiError } from '../../../core/api/api-error';
+import { WidgetEvents } from '../../../core/widgets/widget-events';
 import { SOURCE_LABELS } from '../../../shared/pipes/source-label.pipe';
 import type { FeedPageResult } from '../feed.models';
 import { FeedApi } from '../feed-api';
+import { filtersToParams, toggleTag } from '../feed-query-params';
 import { FeedActions, FeedApiActions } from './feed.actions';
 import { feedFeature } from './feed.reducer';
 
@@ -90,6 +93,31 @@ export const loadNextPage = createEffect(
       ),
     ),
   { functional: true },
+);
+
+// feed effects are created once, so replayed widget events can't toggle a tag twice
+export const tagToggledInWidget = createEffect(
+  (widgetEvents = inject(WidgetEvents)) =>
+    widgetEvents.events$.pipe(
+      filter((event) => event.type === 'insights-tag-toggle'),
+      map(({ tag }) => FeedActions.tagToggled({ tag })),
+    ),
+  { functional: true },
+);
+
+export const applyToggledTag = createEffect(
+  (actions$ = inject(Actions), store = inject(Store), router = inject(Router)) =>
+    actions$.pipe(
+      ofType(FeedActions.tagToggled),
+      withLatestFrom(store.select(feedFeature.selectFilters)),
+      tap(([{ tag }, filters]) => {
+        void router.navigate(['/feed'], {
+          queryParams: filtersToParams(toggleTag(filters, tag)),
+          replaceUrl: true,
+        });
+      }),
+    ),
+  { functional: true, dispatch: false },
 );
 
 export const announcePageLoaded = createEffect(

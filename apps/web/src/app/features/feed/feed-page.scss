@@ -16,6 +16,16 @@
   min-height: calc(2.75rem + 2px);
 }
 
+.feed-page__stats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fa-space-3);
+}
+
+.feed-page__stats-toggle {
+  align-self: flex-start;
+}
+
 .feed-page__grid {
   padding: 0;
   list-style: none;
